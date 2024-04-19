@@ -1,12 +1,38 @@
 import unittest
-from domain.ftp.adapters.FileOperations import Compression
+from domain.ftp.adapters.FileOperations import Compression, FileManipulation
+from domain.ftp.adapters.ProjectDeployement import Ftp, ProjectDeployment
 
 
 class TestCompression(unittest.TestCase):
-    def testCompressProject(self):
-        to_compress = "/home/nyr/Pictures/New_Folder"
-        res = Compression.compressProject(to_compress)
-        self.assertTrue(res)
+    # def testCompressProject(self):
+    #     to_compress = "/home/nyr/Pictures/New_Folder/New"
+    #     res = Compression.compressProject(to_compress)
+    #     print(res)
+    #     self.assertTrue(res)
+
+    # def testRemoveDir(self):
+    #     dir_to_del = "/home/nyr/Pictures/New_Folder"
+    #     FileManipulation.removeDir(dir_to_del)
+    #     self.assertTrue(True)
+
+    # def testConnectFTP(self):
+    #     ftp = Ftp()
+    #     ftp = ftp.connectFTP('192.168.200.136', 'gollum', 'gollum')
+    #     print(ftp)
+    #     ftp.disconnectFTP()
+    #     self.assertTrue(ftp)
+
+    # def testSend(self):
+    #     ftp = Ftp()
+    #     ftp = ftp.connectFTP('192.168.200.136', 'gollum', 'gollum')
+    #     ftp.send('/home/nyr/Pictures/New_Folder/New', 'prod/')
+    #     ftp.disconnectFTP()
+    #     self.assertTrue(True)
+
+    def testDeployProject(self):
+        deploy = ProjectDeployment(Compression(FileManipulation()), Ftp())
+        deploy.deployProject('/home/nyr/Pictures/digikam')
+        self.assertTrue(True)
 
 
 if __name__ == "__main__":

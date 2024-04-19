@@ -1,4 +1,6 @@
 .env
 .idea
+project_tmp
+compressed_dist
 __pycache__
 **/__pycache__/

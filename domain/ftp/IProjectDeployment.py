@@ -11,7 +11,7 @@ class IFtp(ABC):
     def disconnectFTP(self): pass
 
     @abstractmethod
-    def send(self, project_path: str): pass
+    def send(self, project_path: str, project_dist): pass
 
 
 class IProjectDeployment(ABC):

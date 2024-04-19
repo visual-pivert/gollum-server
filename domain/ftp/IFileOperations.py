@@ -6,6 +6,10 @@ class IFileManipulation(ABC):
     @abstractmethod
     def createDir(dir_name: str, permission: int): pass
 
+    @staticmethod
+    @abstractmethod
+    def removeDir(dir_path: str): pass
+
 
 class IFilePermission(ABC):
     @staticmethod
@@ -16,7 +20,7 @@ class IFilePermission(ABC):
 class ICompression(ABC):
     @staticmethod
     @abstractmethod
-    def compressProject(project_path: str): pass
+    def compressProject(project_path: str, dist: str): pass
 
     @staticmethod
     @abstractmethod

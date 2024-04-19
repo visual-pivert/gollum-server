@@ -9,6 +9,21 @@ class FileManipulation(IFileManipulation):
     def createDir(dir_name: str, permission: int):
         os.mkdir(dir_name, permission)
 
+    @staticmethod
+    def removeDir(dir_path: str):
+        dir_path = os.path.normpath(dir_path)
+        for element in os.listdir(dir_path):
+            element = f"{dir_path}/{element}"
+            if os.path.isdir(element):
+                print(element, "dir")
+                FileManipulation.removeDir(element)
+                if len(os.listdir(element)) == 0:
+                    print(element, "empty dir")
+                    os.rmdir(element)
+            else:
+                print(element, "file")
+                os.remove(element)
+
 
 class FilePermission(IFilePermission):
     permission_code = 0o700
@@ -20,7 +35,7 @@ class FilePermission(IFilePermission):
 
 class Compression(ICompression):
     file_manipulation = None
-    compressed_project_dist = "compressed_dist/"
+    compressed_project_dist = "project_tmp"
     archive_format = "xztar"
     message = ""
 
@@ -28,12 +43,9 @@ class Compression(ICompression):
         Compression.file_manipulation = file_manipulation
 
     @staticmethod
-    def compressProject(project_path: str):
-        if not os.path.exists(Compression.compressed_project_dist):
-            FileManipulation.createDir(
-                Compression.compressed_project_dist,
-                FilePermission.permission_code
-            )
+    def compressProject(project_path: str, dist: str = compressed_project_dist):
+        if not os.path.exists(dist):
+            FileManipulation.createDir(dist, FilePermission.permission_code)
 
         # FilePermission.changePermission(
         #     Compression.compressed_project_dist,
@@ -44,7 +56,7 @@ class Compression(ICompression):
             raise Exception('No such file or directory')
 
         compressed_project_name = os.path.basename(os.path.normpath(project_path))
-        compressed_project_path = Compression.compressed_project_dist + compressed_project_name
+        compressed_project_path = os.path.join(dist, compressed_project_name)
 
         try:
             res = shutil.make_archive(
