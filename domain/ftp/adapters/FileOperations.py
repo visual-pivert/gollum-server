@@ -10,19 +10,20 @@ class FileManipulation(IFileManipulation):
         os.mkdir(dir_name, permission)
 
     @staticmethod
-    def removeDir(dir_path: str):
-        dir_path = os.path.normpath(dir_path)
-        for element in os.listdir(dir_path):
-            element = f"{dir_path}/{element}"
-            if os.path.isdir(element):
-                print(element, "dir")
-                FileManipulation.removeDir(element)
-                if len(os.listdir(element)) == 0:
-                    print(element, "empty dir")
-                    os.rmdir(element)
-            else:
-                print(element, "file")
-                os.remove(element)
+    def remove(path: str):
+        path = os.path.normpath(path)
+
+        if os.path.isdir(path) and len(os.listdir(path)) > 0:
+            for element in os.listdir(path):
+                element = os.path.join(path, element)
+                FileManipulation.remove(element)
+                if len(os.listdir(path)) == 0:
+                    os.rmdir(path)
+            pass
+        elif not os.path.isdir(path):
+            os.remove(path)
+        else:
+            os.rmdir(path)
 
 
 class FilePermission(IFilePermission):

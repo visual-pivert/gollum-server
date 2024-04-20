@@ -8,7 +8,7 @@ class IFileManipulation(ABC):
 
     @staticmethod
     @abstractmethod
-    def removeDir(dir_path: str): pass
+    def remove(path: str): pass
 
 
 class IFilePermission(ABC):

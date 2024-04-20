@@ -10,9 +10,9 @@ class TestCompression(unittest.TestCase):
     #     print(res)
     #     self.assertTrue(res)
 
-    # def testRemoveDir(self):
+    # def testRemove(self):
     #     dir_to_del = "/home/nyr/Pictures/New_Folder"
-    #     FileManipulation.removeDir(dir_to_del)
+    #     FileManipulation.remove(dir_to_del)
     #     self.assertTrue(True)
 
     # def testConnectFTP(self):

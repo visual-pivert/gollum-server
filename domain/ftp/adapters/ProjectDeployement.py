@@ -6,7 +6,7 @@ from ftplib import FTP
 
 
 class Ftp(IFtp):
-    ftp = ""
+    ftp = None
 
     def connectFTP(self, host: str, user: str, password: str):
         try:
@@ -28,8 +28,9 @@ class Ftp(IFtp):
 
         if os.path.isdir(project_path):
 
-            print(f'create {element_dist}')
-            self.ftp.mkd(element_dist)
+            if element_dist not in self.ftp.nlst(os.path.dirname(element_dist)):
+                print(f'create {element_dist}')
+                self.ftp.mkd(element_dist)
 
             for element in os.listdir(project_path):
                 element_source = os.path.join(project_path, element)
@@ -55,7 +56,8 @@ class ProjectDeployment(IProjectDeployment):
     def deployProject(self, project_path: str):
         project_path = os.path.normpath(project_path)
         dist_tmp = os.path.join(self.dist_tmp, os.path.basename(project_path))
-        os.mkdir(dist_tmp)
+        if not os.path.exists(dist_tmp):
+            os.makedirs(dist_tmp)
 
         compressed_project = self.compression.compressProject(project_path, dist_tmp)
 
