@@ -1,5 +1,5 @@
 import os
-
+import requests
 from domain.ftp.IFileOperations import ICompression
 from domain.ftp.IProjectDeployment import IFtp, IProjectDeployment
 from ftplib import FTP
@@ -47,11 +47,22 @@ class ProjectDeployment(IProjectDeployment):
     user = 'gollum'
     password = 'gollum'
     dist_tmp = 'project_tmp'
-    project_dist = 'prod/'
+    project_dist = 'prody/'
 
     def __init__(self, compression: ICompression, ftp: IFtp):
         self.compression = compression
         self.ftp = ftp
+
+    def createDecompressScript(self, file_path: str, archive_path: str):
+        script = \
+            f"""<?php
+            echo "decompression...\\n";
+            shell_exec('tar -xf {archive_path}');
+            echo "decompression successfully!!!";
+        ?>
+        """
+        with open(file_path, 'w') as file:
+            file.write(script)
 
     def deployProject(self, project_path: str):
         project_path = os.path.normpath(project_path)
@@ -59,8 +70,24 @@ class ProjectDeployment(IProjectDeployment):
         if not os.path.exists(dist_tmp):
             os.makedirs(dist_tmp)
 
-        compressed_project = self.compression.compressProject(project_path, dist_tmp)
+        compressed_project_path = self.compression.compressProject(project_path, dist_tmp)
+        compressed_project = os.path.basename(compressed_project_path)
+
+        to_send_path = os.path.dirname(compressed_project_path)
+        script_local_path = os.path.join(to_send_path, 'decompress.php')
+        self.createDecompressScript(script_local_path, compressed_project)
+        t = script_local_path.split('/')
+        script_remote_path = os.path.join(t[-2], t[-1])
 
         self.ftp.connectFTP(self.host, self.user, self.password)
-        self.ftp.send(os.path.dirname(compressed_project), self.project_dist)
+        self.ftp.send(os.path.dirname(compressed_project_path), self.project_dist)
         self.ftp.disconnectFTP()
+
+        self.decompressDeployedProject(script_remote_path)
+
+    def decompressDeployedProject(self, script: str):
+        try:
+            r = requests.get(f'http://192.168.200.136/golllum/{script}')
+        except Exception as e:
+            print(e)
+        # pass

@@ -31,8 +31,14 @@ class TestCompression(unittest.TestCase):
 
     def testDeployProject(self):
         deploy = ProjectDeployment(Compression(FileManipulation()), Ftp())
-        deploy.deployProject('/home/nyr/Pictures/digikam')
+        path = deploy.deployProject('/home/nyr/Pictures/digikam')
+        print(path)
         self.assertTrue(True)
+
+    # def testCreateDecompressScript(self):
+    #     deploy = ProjectDeployment(Compression(FileManipulation()), Ftp())
+    #     deploy.createDecompressScript('/home/nyr/snap/script.php', 'snap.tar.zx')
+    #     self.assertTrue(True)
 
 
 if __name__ == "__main__":

@@ -16,4 +16,10 @@ class IFtp(ABC):
 
 class IProjectDeployment(ABC):
     @abstractmethod
+    def createDecompressScript(self, file_path: str, archive_path: str): pass
+
+    @abstractmethod
     def deployProject(self, project_path: str): pass
+
+    @abstractmethod
+    def decompressDeployedProject(self, script: str): pass
