@@ -6,7 +6,7 @@ import datetime
 from kink import inject
 
 
-class AccountAdapters(IAccount):
+class AccountAdapter(IAccount):
 
     @inject
     def __init__(self, database):
