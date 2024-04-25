@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, render_template, request, redirect, url_for
-from domain.account.adapters.AccountAdapters import AccountAdapters
+from domain.account.adapters.AccountAdapter import AccountAdapter
 from domain.account.AccountEntity import AccountEntity
 from domain.auth.forms.LoginForm import LoginForm
 
