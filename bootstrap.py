@@ -8,7 +8,7 @@ from domain.auth.IAuth import IAuth
 from domain.auth.adapters.AuthAdapter import AuthAdapter
 
 
-class Boostrap:
+class Bootstrap:
     def __init__(self):
         di["database"] = lambda _di: sqlite3.connect("/home/gollum/Project/gollum/var/database.db")
         di[IAccount] = lambda _di: AccountAdapter(_di["database"])

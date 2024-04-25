@@ -2,6 +2,10 @@ from domain.auth.IAuth import IAuth
 from domain.auth.UserEntity import UserEntity
 from flask import session
 from kink import inject
+import json
+from random import randint
+import datetime
+import base64
 
 
 class AuthAdapter(IAuth):
@@ -17,7 +21,11 @@ class AuthAdapter(IAuth):
     def loggedUser(self) -> "UserEntity": pass
 
     def createJwt(self, data: dict) -> str:
-        pass
+        timestamp = datetime.datetime.now().timestamp()
+        data['_id'] = randint(10000, 99999)
+        data['_timestamp'] = timestamp
+        jsoned = json.dumps(data).encode('utf-8')
+        return str(base64.urlsafe_b64encode(jsoned))
 
     def getUserBy(self, field: str, value: any) -> UserEntity:
         connector = self.database
@@ -33,5 +41,3 @@ class AuthAdapter(IAuth):
 
         user = UserEntity.makeUser(user_fetched)
         return user
-
-
