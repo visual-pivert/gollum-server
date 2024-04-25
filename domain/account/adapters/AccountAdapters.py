@@ -3,13 +3,17 @@ from domain.account.AccountEntity import AccountEntity
 from domain.auth.UserEntity import UserEntity
 import sqlite3
 import datetime
+from kink import inject
 
 
 class AccountAdapters(IAccount):
 
-    @staticmethod
-    def createAccount(account: AccountEntity) -> "UserEntity":
-        connector = sqlite3.connect("/home/gollum/Project/gollum/var/database.db")
+    @inject
+    def __init__(self, database):
+        self.database = database
+
+    def createAccount(self, account: AccountEntity) -> "UserEntity":
+        connector = self.database
         cursor = connector.cursor()
         query = "INSERT INTO Users(username, created_at, password, email, slug) VALUES(?, ?, ?, ?, ?)"
         timestamp = datetime.datetime.now().timestamp()
