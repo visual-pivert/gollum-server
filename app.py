@@ -1,11 +1,11 @@
 from flask import Flask
 from domain.account.routes import account_app
-from bootstrap import Boostrap
+from bootstrap import Bootstrap
 from domain.auth.routes import auth_app
 
 app = Flask(__name__)
 
-bootstrap = Boostrap()
+bootstrap = Bootstrap()
 
 
 @app.route('/')
