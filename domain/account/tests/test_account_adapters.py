@@ -1,5 +1,5 @@
 import unittest
-from domain.account.adapters.AccountAdapters import AccountAdapters
+from domain.account.adapters.AccountAdapter import AccountAdapter
 from domain.account.AccountEntity import AccountEntity
 from random import randint
 
@@ -13,7 +13,7 @@ class TestAccountAdapters (unittest.TestCase):
         # TODOS: On n'oublie pas de hasher
         account.password = "password"
 
-        user = AccountAdapters.createAccount(account)
+        user = AccountAdapter.createAccount(account)
         self.assertTrue(user)
 
 
