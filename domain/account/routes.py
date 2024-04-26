@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template, request, redirect, url_for
+from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash
 from domain.account.adapters.AccountAdapter import AccountAdapter
 from domain.account.AccountEntity import AccountEntity
 from domain.account.forms.CreateAccountForm import CreateAccountForm
@@ -19,6 +19,9 @@ def createAccount():
         new_account.username = form.username.data
         new_account.email = form.email.data
         new_account.password = form.password.data
-        account.createAccount(new_account)
-        return redirect(url_for('index'))
+        try:
+            account.createAccount(new_account)
+            return redirect(url_for('index'))
+        except Exception as e:
+            flash(e.args[0])
     return render_template("account.html", form=form)
