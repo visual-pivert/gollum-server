@@ -16,9 +16,11 @@ class AuthAdapter(IAuth):
     def login(self, username: str, password: str, remember: bool):
         user_who_log = self.getUserBy('username', username)
         exp_date = int(datetime.datetime.now().timestamp()) + datetime.timedelta(days=3).seconds
-        if user_who_log:
-            if password == user_who_log.password:
-                session['access_token'] = self.createJwt({'username': username, 'exp_date': exp_date})
+        if user_who_log and password == user_who_log.password:
+            session['access_token'] = self.createJwt({'username': username, 'exp_date': exp_date})
+        else:
+            raise Exception("Vérifier le nom d'utilisateur et le mot de passe")
+
 
     def logout(self):
         # Is logged in?
@@ -26,11 +28,13 @@ class AuthAdapter(IAuth):
             session.pop('access_token')
 
     def loggedUser(self) -> "UserEntity":
-        access_token = session['access_token'] if session['access_token'] else ""
-        json_data = base64.urlsafe_b64decode(access_token)
-        data = json.loads(json_data)
-        user = self.getUserBy('username', data["username"])
-        return user if user else None
+        access_token = session['access_token'] if ('access_token' in session.keys()) else ""
+        if access_token:
+            json_data = base64.urlsafe_b64decode(access_token)
+            data = json.loads(json_data)
+            user = self.getUserBy('username', data["username"])
+            return user
+        return None
 
     def createJwt(self, data: dict) -> str:
         timestamp = int(datetime.datetime.now().timestamp())
@@ -54,5 +58,5 @@ class AuthAdapter(IAuth):
 
         connector.commit()
 
-        user = UserEntity.makeUser(user_fetched)
+        user = UserEntity.makeUser(user_fetched) if user_fetched else None
         return user

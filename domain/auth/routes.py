@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template, request, redirect, url_for, session
+from flask import Flask, Blueprint, render_template, request, redirect, url_for, session, flash
 from domain.account.adapters.AccountAdapter import AccountAdapter
 from domain.account.AccountEntity import AccountEntity
 from domain.auth.forms.LoginForm import LoginForm
@@ -15,7 +15,11 @@ def login():
 
     form = LoginForm(request.form)
     if "POST" == request.method and form.validate():
-        auth.login(form.username.data, form.password.data, False)
+        try:
+            auth.login(form.username.data, form.password.data, False)
+        except Exception as e:
+            flash(e.args[0])
+
 
     if auth.loggedUser():
         return auth.loggedUser().username + ' <span style="color: green">CONNECTED</span>'
