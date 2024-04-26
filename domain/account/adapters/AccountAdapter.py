@@ -16,7 +16,7 @@ class AccountAdapter(IAccount):
         connector = self.database
         cursor = connector.cursor()
         query = "INSERT INTO Users(username, created_at, password, email, slug) VALUES(?, ?, ?, ?, ?)"
-        timestamp = datetime.datetime.now().timestamp()
+        timestamp = int(datetime.datetime.now().timestamp())
         cursor.execute(query, (account.username, timestamp, account.password, account.email, account.username))
         last_id = cursor.lastrowid
         connector.commit()

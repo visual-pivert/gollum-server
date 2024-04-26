@@ -14,18 +14,34 @@ class AuthAdapter(IAuth):
         self.database = database
 
     def login(self, username: str, password: str, remember: bool):
-        pass
+        user_who_log = self.getUserBy('username', username)
+        exp_date = int(datetime.datetime.now().timestamp()) + datetime.timedelta(days=3).seconds
+        if user_who_log:
+            if password == user_who_log.password:
+                session['access_token'] = self.createJwt({'username': username, 'exp_date': exp_date})
 
-    def logout(self): pass
+    def logout(self):
+        # Is logged in?
+        if "access_token" in session.keys():
+            session.pop('access_token')
 
-    def loggedUser(self) -> "UserEntity": pass
+    def loggedUser(self) -> "UserEntity":
+        access_token = session['access_token'] if session['access_token'] else ""
+        json_data = base64.urlsafe_b64decode(access_token)
+        data = json.loads(json_data)
+        user = self.getUserBy('username', data["username"])
+        return user if user else None
 
     def createJwt(self, data: dict) -> str:
-        timestamp = datetime.datetime.now().timestamp()
+        timestamp = int(datetime.datetime.now().timestamp())
         data['_id'] = randint(10000, 99999)
         data['_timestamp'] = timestamp
+
+        # Conversion string -> bytes pour b64encode
         jsoned = json.dumps(data).encode('utf-8')
-        return str(base64.urlsafe_b64encode(jsoned))
+
+        # Conversion Bytes -> string
+        return base64.urlsafe_b64encode(jsoned).decode('utf-8')
 
     def getUserBy(self, field: str, value: any) -> UserEntity:
         connector = self.database
@@ -37,7 +53,6 @@ class AuthAdapter(IAuth):
         user_fetched = cursor.fetchone()
 
         connector.commit()
-        connector.close()
 
         user = UserEntity.makeUser(user_fetched)
         return user

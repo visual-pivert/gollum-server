@@ -4,6 +4,7 @@ from bootstrap import Bootstrap
 from domain.auth.routes import auth_app
 
 app = Flask(__name__)
+app.secret_key = "42d31e41fb18761c0a147e59b51ccb2169bb1a27096c110c41557932b17ee275"
 
 bootstrap = Bootstrap()
 
