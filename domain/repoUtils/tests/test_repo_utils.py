@@ -1,27 +1,17 @@
 import unittest
 from domain.repoUtils.adapters.RepoUtilsAdapter import RepoUtilsAdapter
+from kink import di
+from domain.repoUtils.IRepoUtils import IRepoUtils
+from bootstrap import Bootstrap
 
 class TestRepoUtils(unittest.TestCase):
     def testCreateRepo(self):
         pass
 
-    def testParse(self):
-        print("-----TEST PARSE-----")
-        filepath = "/home/gollum/Project/gollum/domain/repoUtils/tests/gitolite_test.conf"
-        file = open(filepath, 'r')
-        config = RepoUtilsAdapter.parse(file)
-        print(config)
-
-    def testDump(self):
-        print("-----TEST DUMP-----")
-        config = {'gitolite-admin': ['RW+     =   admin', 'RW+     =   repo'], 'testing': ['RW+     =   @all']}
-        dumped = RepoUtilsAdapter.dump(config)
-        print(dumped)
-
     def testRepoUtilsScenar(self):
         print("------TEST ALL------")
-        filepath = "/home/gollum/Project/gollum/domain/repoUtils/tests/gitolite_test.conf"
-        repo_utils = RepoUtilsAdapter(filepath)
+        bootstrap = Bootstrap()
+        repo_utils = di[IRepoUtils]
 
         print("Repo created")
         repo_utils.createRepo('new_repo')
