@@ -8,8 +8,8 @@ from domain.account.IAccount import IAccount
 account_app = Blueprint('account_app', __name__, template_folder="./templates")
 
 
-@account_app.route("/account", methods=['POST', 'GET'])
-def createAccount():
+@account_app.route("/signup", methods=['POST', 'GET'])
+def signup():
     # injection de dependance
     account = di[IAccount]
 

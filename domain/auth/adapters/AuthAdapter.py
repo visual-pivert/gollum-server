@@ -6,6 +6,7 @@ import json
 from random import randint
 import datetime
 import base64
+import bcrypt
 
 
 class AuthAdapter(IAuth):
@@ -16,18 +17,17 @@ class AuthAdapter(IAuth):
     def login(self, username: str, password: str, remember: bool):
         user_who_log = self.getUserBy('username', username)
         exp_date = int(datetime.datetime.now().timestamp()) + datetime.timedelta(days=3).seconds
-        if user_who_log and password == user_who_log.password:
+        if user_who_log and self.verifyPassword(password, user_who_log.password):
             session['access_token'] = self.createJwt({'username': username, 'exp_date': exp_date})
         else:
-            raise Exception("Vérifier le nom d'utilisateur et le mot de passe")
-
+            raise Exception("Vérifier le nom d'utilisateur ou le mot de passe")
 
     def logout(self):
         # Is logged in?
         if "access_token" in session.keys():
             session.pop('access_token')
 
-    def loggedUser(self) -> "UserEntity":
+    def loggedUser(self) -> UserEntity | None:
         access_token = session['access_token'] if ('access_token' in session.keys()) else ""
         if access_token:
             json_data = base64.urlsafe_b64decode(access_token)
@@ -60,3 +60,7 @@ class AuthAdapter(IAuth):
 
         user = UserEntity.makeUser(user_fetched) if user_fetched else None
         return user
+
+    def verifyPassword(self, password: str, hashed_password: str) -> bool:
+        _password = bcrypt.hashpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
+        return hashed_password.encode('utf-8') == _password

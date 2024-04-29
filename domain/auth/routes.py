@@ -20,7 +20,6 @@ def login():
         except Exception as e:
             flash(e.args[0])
 
-
     if auth.loggedUser():
         return auth.loggedUser().username + ' <span style="color: green">CONNECTED</span>'
 
