@@ -1,6 +1,7 @@
 from domain.account.IAccount import IAccount
 from domain.account.AccountEntity import AccountEntity
 from domain.auth.UserEntity import UserEntity
+from domain.account.exceptions.SignupException import SignupException
 import bcrypt
 import sqlite3
 import datetime
@@ -25,9 +26,9 @@ class AccountAdapter(IAccount):
             cursor.execute(query, (account.username, timestamp, cyphered_password, account.email, account.username))
         except sqlite3.IntegrityError as e:
             if 'username' in e.args[0]:
-                raise Exception("Ce nom d'utilisateur est déjà utilisé, veuillez en choisir un autre.")
+                raise SignupException("Ce nom d'utilisateur est déjà utilisé, veuillez en choisir un autre.")
             if 'email' in e.args[0]:
-                raise Exception("L'adresse e-mail que vous avez entrée est déjà associée à un compte")
+                raise SignupException("L'adresse e-mail que vous avez entrée est déjà associée à un compte")
         last_id = cursor.lastrowid
         connector.commit()
 

@@ -1,7 +1,8 @@
 from domain.auth.IAuth import IAuth
 from domain.auth.UserEntity import UserEntity
+from domain.auth.exceptions.LoginException import LoginException
 from flask import session
-from kink import inject
+from kink import inject, di
 import json
 from random import randint
 import datetime
@@ -20,7 +21,7 @@ class AuthAdapter(IAuth):
         if user_who_log and self.verifyPassword(password, user_who_log.password):
             session['access_token'] = self.createJwt({'username': username, 'exp_date': exp_date})
         else:
-            raise Exception("Vérifier le nom d'utilisateur ou le mot de passe")
+            raise LoginException("Vérifier le nom d'utilisateur ou le mot de passe")
 
     def logout(self):
         # Is logged in?
@@ -51,12 +52,10 @@ class AuthAdapter(IAuth):
         connector = self.database
         cursor = connector.cursor()
 
-        query = "SELECT * FROM Users WHERE ?=?"
-        cursor.execute(query, (field, value))
+        query = "SELECT * FROM Users WHERE {} = ?".format(field)
+        cursor.execute(query, (value,))
 
         user_fetched = cursor.fetchone()
-
-        connector.commit()
 
         user = UserEntity.makeUser(user_fetched) if user_fetched else None
         return user

@@ -17,4 +17,3 @@ def index():
 # Register all apps routes
 app.register_blueprint(account_app)
 app.register_blueprint(auth_app)
-
