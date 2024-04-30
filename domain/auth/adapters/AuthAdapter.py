@@ -1,8 +1,7 @@
 from domain.auth.IAuth import IAuth
 from domain.auth.UserEntity import UserEntity
 from domain.auth.exceptions.LoginException import LoginException
-from flask import session
-from kink import inject, di
+from kink import inject
 import json
 from random import randint
 import datetime
@@ -19,23 +18,25 @@ class AuthAdapter(IAuth):
         user_who_log = self.getUserBy('username', username)
         exp_date = int(datetime.datetime.now().timestamp()) + datetime.timedelta(days=3).seconds
         if user_who_log and self.verifyPassword(password, user_who_log.password):
-            session['access_token'] = self.createJwt({'username': username, 'exp_date': exp_date})
+            access_token = self.createJwt({'username': username, 'exp_date': exp_date})
+            # update de l'access token dans la base de donnee
+            self.updateAccessToken(username, access_token)
+            out = {
+                'username': username,
+                'email': user_who_log.email,
+                'access_token': access_token
+            }
+            return out
         else:
-            raise LoginException("Vérifier le nom d'utilisateur ou le mot de passe")
+            raise LoginException("Nom d'utilisateur ou mot de passe incorrecte")
 
-    def logout(self):
-        # Is logged in?
-        if "access_token" in session.keys():
-            session.pop('access_token')
+    def logout(self, access_token=""):
+        # suppression de l'access token
+        user_who_logged_out = self.getUserBy('access_token', access_token)
+        self.updateAccessToken(user_who_logged_out.username, None)
 
     def loggedUser(self) -> UserEntity | None:
-        access_token = session['access_token'] if ('access_token' in session.keys()) else ""
-        if access_token:
-            json_data = base64.urlsafe_b64decode(access_token)
-            data = json.loads(json_data)
-            user = self.getUserBy('username', data["username"])
-            return user
-        return None
+        pass
 
     def createJwt(self, data: dict) -> str:
         timestamp = int(datetime.datetime.now().timestamp())
@@ -59,6 +60,15 @@ class AuthAdapter(IAuth):
 
         user = UserEntity.makeUser(user_fetched) if user_fetched else None
         return user
+
+    def updateAccessToken(self, username: str, access_token: str|None):
+        connector = self.database
+        cursor = connector.cursor()
+
+        query = "UPDATE Users SET access_token = ? WHERE username = ?"
+        cursor.execute(query, (access_token, username))
+
+        connector.commit()
 
     def verifyPassword(self, password: str, hashed_password: str) -> bool:
         _password = bcrypt.hashpw(password.encode('utf-8'), hashed_password.encode('utf-8'))

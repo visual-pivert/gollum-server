@@ -1,6 +1,7 @@
-from wtforms import Form, StringField, PasswordField, validators
+from apiflask import Schema
+from apiflask.fields import String
 
 
-class LoginForm (Form):
-    username = StringField('Username', [validators.DataRequired()])
-    password = PasswordField('Password', [validators.DataRequired()])
+class LoginForm(Schema):
+    username = String(required=True)
+    password = String(required=True)

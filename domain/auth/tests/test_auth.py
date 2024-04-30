@@ -1,9 +1,7 @@
 import unittest
-from domain.auth.adapters.AuthAdapter import AuthAdapter
 from bootstrap import Bootstrap
 from kink import di
 from domain.auth.IAuth import IAuth
-from flask import session
 
 
 class TestAuth(unittest.TestCase):

@@ -1,19 +1,14 @@
-from flask import Flask
+from apiflask import APIFlask
 from domain.account.routes import account_app
 from bootstrap import Bootstrap
 from domain.auth.routes import auth_app
+from domain.repo.routes import repo_app
 
-app = Flask(__name__)
-app.secret_key = "42d31e41fb18761c0a147e59b51ccb2169bb1a27096c110c41557932b17ee275"
+app = APIFlask(__name__)
 
 bootstrap = Bootstrap()
-
-
-@app.route('/')
-def index():
-    return "je suis la page d'accueil"
-
 
 # Register all apps routes
 app.register_blueprint(account_app)
 app.register_blueprint(auth_app)
+app.register_blueprint(repo_app)

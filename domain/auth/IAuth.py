@@ -8,7 +8,7 @@ class IAuth (ABC):
     def login(self, username: str, password: str, remember: bool): pass
 
     @abstractmethod
-    def logout(self): pass
+    def logout(self, access_token=""): pass
 
     @abstractmethod
     def loggedUser(self) -> "UserEntity": pass

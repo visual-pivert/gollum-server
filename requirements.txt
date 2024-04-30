@@ -3,3 +3,4 @@ wtforms==3.1.2
 email_validator==2.1.1
 kink==0.8.0
 bcrypt==4.1.2
+apiflask==2.1.1
