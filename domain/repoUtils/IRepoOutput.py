@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from domain.auth.UserEntity import UserEntity
+from domain.user.user_entity import UserEntity
 
 
 class IRepoOutput(ABC):

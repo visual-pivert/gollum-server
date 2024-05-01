@@ -1,24 +1,23 @@
 import unittest
-from domain.account.adapters.AccountAdapter import AccountAdapter
-from domain.account.AccountEntity import AccountEntity
+from domain.account.account_entity import AccountEntity
 from random import randint
 from kink import di
-from domain.account.IAccount import IAccount
+from domain.account.account_interface import IAccount
 from bootstrap import Bootstrap
 
 
 class TestAccountAdapters (unittest.TestCase):
     def testCreateAccount(self):
         boostrap = Bootstrap()
-        account = AccountEntity()
-        account.username = "user-" + str(randint(1000000, 9999999))
-        account.email = account.username + ".email@gmail.com"
+        new_account = AccountEntity()
+        new_account.username = "user-" + str(randint(1000000, 9999999))
+        new_account.email = new_account.username + ".email@gmail.com"
 
         # TODOS: On n'oublie pas de hasher
-        account.password = "password"
+        new_account.password = "password"
 
         account_adapter = di[IAccount]
-        user = account_adapter.createAccount(account)
+        user = account_adapter.createAccount(new_account)
         self.assertTrue(user)
 
 

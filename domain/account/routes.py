@@ -1,27 +1,20 @@
-from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash
-from domain.account.adapters.AccountAdapter import AccountAdapter
-from domain.account.AccountEntity import AccountEntity
-from domain.account.forms.CreateAccountForm import CreateAccountForm
+from apiflask import APIBlueprint
+from domain.account.schemas.account_schema import AccountSchema
+from domain.account.account_entity import AccountEntity
 from kink import di
-from domain.account.IAccount import IAccount
+from domain.account.account_interface import IAccount
 
-account_app = Blueprint('account_app', __name__, template_folder="./templates")
+account_app = APIBlueprint('account_app', __name__)
 
 
-@account_app.route("/signup", methods=['POST', 'GET'])
-def signup():
+@account_app.post("/signup")
+@account_app.input(AccountSchema)
+def signup(json_data):
     # injection de dependance
     account = di[IAccount]
-
-    form = CreateAccountForm(request.form)
-    if "POST" == request.method and form.validate():
-        new_account = AccountEntity()
-        new_account.username = form.username.data
-        new_account.email = form.email.data
-        new_account.password = form.password.data
-        try:
-            account.createAccount(new_account)
-            return redirect(url_for('index'))
-        except Exception as e:
-            flash(e.args[0])
-    return render_template("account.html", form=form)
+    account_entity = AccountEntity()
+    account_entity.username = json_data["username"]
+    account_entity.password = json_data["password"]
+    account_entity.email = json_data["email"]
+    id = account.createAccount(account_entity)
+    return {"username": account_entity.username}
