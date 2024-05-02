@@ -1,2 +1,0 @@
-class SignupException(Exception):
-    pass

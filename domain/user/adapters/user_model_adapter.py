@@ -1,6 +1,8 @@
 from domain.user.user_model_interface import IUserModel
 from domain.user.user_entity import UserEntity
+from domain.user.exceptions.user_exception import UserNotFoundException, UserNotUniqueException
 from kink import inject
+from sqlite3 import IntegrityError
 import bcrypt
 import datetime
 
@@ -19,6 +21,9 @@ class UserModelAdapter(IUserModel):
         cursor.execute(query, (value,))
 
         user_fetched = cursor.fetchone()
+
+        if not user_fetched:
+            raise UserNotFoundException()
 
         user = self.makeUser(user_fetched) if user_fetched else None
         return user
@@ -39,8 +44,11 @@ class UserModelAdapter(IUserModel):
 
         # cyphered_password -> str
         cyphered_password = bcrypt.hashpw(user.password.encode('utf8'), bcrypt.gensalt()).decode("utf-8")
-        cursor.execute(query, (user.username, timestamp, cyphered_password, user.email, user.username,
-                               user.access_token))
+        try:
+            cursor.execute(query, (user.username, timestamp, cyphered_password, user.email, user.username,
+                                   user.access_token))
+        except IntegrityError as e:
+            raise UserNotUniqueException()
 
         last_id = cursor.lastrowid
         connector.commit()
