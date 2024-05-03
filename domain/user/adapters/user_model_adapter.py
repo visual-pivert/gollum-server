@@ -28,13 +28,30 @@ class UserModelAdapter(IUserModel):
         user = self.makeUser(user_fetched) if user_fetched else None
         return user
 
-    def updateAccessToken(self, username: str, new_access_token: str|None):
+    def updateAccessToken(self, username: str, new_access_token: str | None):
         connector = self.database
         cursor = connector.cursor()
 
         query = "UPDATE Users SET access_token = ? WHERE username = ?"
         cursor.execute(query, (new_access_token, username))
         connector.commit()
+
+    def listUser(self) -> [UserEntity]:
+        connector = self.database
+        cursor = connector.cursor()
+
+        query = "SELECT * FROM Users"
+        cursor.execute(query)
+
+        users = cursor.fetchall()
+
+        if not users:
+            raise UserNotFoundException()
+
+        the_users = []
+        for user in users:
+            the_users.append(self.makeUser(user))
+        return the_users
 
     def addUser(self, user: UserEntity) -> int:
         connector = self.database
@@ -54,16 +71,24 @@ class UserModelAdapter(IUserModel):
         connector.commit()
         return last_id
 
+    def deleteUserBy(self, field: str, value: str):
+        connector = self.database
+        cursor = connector.cursor()
+        query = "DELETE FROM Users WHERE {}=?".format(field)
+
+        cursor.execute(query, (value,))
+        connector.commit()
+
     def makeUser(self, user_data: tuple, user_metadata=None) -> UserEntity:
         if user_metadata is None:
             user_metadata = {}
         user = UserEntity()
-        user.id = user_data[0]
-        user.username = user_data[1]
-        user.created_at = user_data[2]
-        user.password = user_data[3]
-        user.email = user_data[4]
-        user.slug = user_data[5]
-        user.access_token = user_data[6]
+        user.id = user_data[0] if 0 in range(len(user_data)) else None
+        user.username = user_data[1] if 1 in range(len(user_data)) else None
+        user.created_at = user_data[2] if 2 in range(len(user_data)) else None
+        user.password = user_data[3] if 3 in range(len(user_data)) else None
+        user.email = user_data[4] if 4 in range(len(user_data)) else None
+        user.slug = user_data[5] if 5 in range(len(user_data)) else None
+        user.access_token = user_data[6] if 6 in range(len(user_data)) else None
         user.meta = user_metadata
         return user

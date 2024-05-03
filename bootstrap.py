@@ -14,6 +14,10 @@ from domain.user.user_model_interface import IUserModel
 from domain.user.adapters.user_model_adapter import UserModelAdapter
 from domain.security.security_interface import ISecurity
 from domain.security.adapters.security_adapter import SecurityAdapter
+from domain.gitolite.gitolite_interface import IGitolite
+from domain.gitolite.adapters.gitolite_adapter import GitoliteAdapter
+from domain.contrib.contrib_interface import IContrib
+from domain.contrib.adapters.contrib_adapter import ContribAdapter
 
 
 class Bootstrap:
@@ -26,3 +30,5 @@ class Bootstrap:
         di[IAccess] = lambda _di: AccessAdapter()
         di[IUserModel] = lambda _di: UserModelAdapter(_di["database"])
         di[ISecurity] = lambda _di: SecurityAdapter()
+        di[IGitolite] = lambda _di: GitoliteAdapter()
+        di[IContrib] = lambda _di: ContribAdapter()

@@ -11,4 +11,10 @@ class IUserModel(ABC):
     def updateAccessToken(self, username: str, new_access_token: str | None): pass
 
     @abstractmethod
+    def listUser(self) -> [UserEntity]: pass
+
+    @abstractmethod
     def addUser(self, user: UserEntity) -> int: pass
+
+    @abstractmethod
+    def deleteUserBy(self, field: str, value: str): pass

@@ -7,6 +7,7 @@ from domain.user.user_model_interface import IUserModel
 from domain.access.exceptions.access_exception import AccessException
 from domain.user.exceptions.user_exception import UserNotFoundException
 from domain.security.security_interface import ISecurity
+from domain.access.exceptions.access_exception import InvalidAccessTokenException
 from kink import inject
 
 
@@ -34,7 +35,9 @@ class AccessAdapter(IAccess):
             self.user_model.updateAccessToken(user.username, None)
 
     def verifyAccessToken(self, access_token: str) -> bool:
-        pass
+        if access_token:
+            return True
+        raise InvalidAccessTokenException()
 
     def generateToken(self, obj: dict) -> str:
         timestamp = int(datetime.datetime.now().timestamp())
