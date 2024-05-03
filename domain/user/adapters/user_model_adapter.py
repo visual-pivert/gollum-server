@@ -1,6 +1,6 @@
 from domain.user.user_model_interface import IUserModel
 from domain.user.user_entity import UserEntity
-from domain.user.exceptions.user_exception import UserNotFoundException, UserNotUniqueException
+from domain.user.exceptions.user_exception import UsernameNotUniqueException, EmailNotUniqueException, UserNotFoundException
 from kink import inject
 from sqlite3 import IntegrityError
 import bcrypt
@@ -65,7 +65,10 @@ class UserModelAdapter(IUserModel):
             cursor.execute(query, (user.username, timestamp, cyphered_password, user.email, user.username,
                                    user.access_token))
         except IntegrityError as e:
-            raise UserNotUniqueException()
+            if 'username' in e.args[0]:
+                raise UsernameNotUniqueException()
+            if 'email' in e.args[0]:
+                raise EmailNotUniqueException()
 
         last_id = cursor.lastrowid
         connector.commit()

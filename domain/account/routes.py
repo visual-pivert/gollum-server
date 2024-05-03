@@ -7,7 +7,7 @@ from domain.account.account_interface import IAccount
 account_app = APIBlueprint('account_app', __name__)
 
 
-@account_app.post("/signup")
+@account_app.post("/api/signup")
 @account_app.input(AccountSchema)
 def signup(json_data):
     # injection de dependance

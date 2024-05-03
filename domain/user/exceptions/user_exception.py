@@ -6,5 +6,11 @@ class UserNotFoundException(HTTPError):
     status_code = 404
 
 
-class UserNotUniqueException(HTTPError):
-    pass
+class UsernameNotUniqueException(HTTPError):
+    message = "Nom d'utilisateur non disponible"
+    status_code = 409
+
+
+class EmailNotUniqueException(HTTPError):
+    message = "Adresse email non disponible"
+    status_code = 409

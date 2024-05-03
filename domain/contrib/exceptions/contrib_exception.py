@@ -7,4 +7,4 @@ class ContribNotFoundException(HTTPError):
 
 class IsContribException(HTTPError):
     message = "Déja contributeur"
-    status_code = 401
+    status_code = 409

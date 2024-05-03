@@ -7,7 +7,7 @@ from kink import di
 access_app = APIBlueprint('access_app', __name__)
 
 
-@access_app.post("/access")
+@access_app.post("/api/access")
 @access_app.input(AccessSchema)
 def access(json_data):
     access = di[IAccess]
@@ -21,7 +21,7 @@ def access(json_data):
     return abort(401)
 
 
-@access_app.get("/revoke")
+@access_app.get("/api/revoke")
 def revoke():
     access = di[IAccess]
     access_token = request.headers.get('Access-token')
