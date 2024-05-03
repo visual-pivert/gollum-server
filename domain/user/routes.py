@@ -1,11 +1,8 @@
 from apiflask import APIBlueprint
-from domain.account.schemas.account_schema import AccountSchema
 from domain.user.user_model_interface import IUserModel
-from domain.access.access_interface import IAccess
 from domain.access.decorators.access_decorator import verifyAccessToken
 from domain.user.schemas.user_schema import UserListSchema, UserInputSchema, UserOutputSchema
 from kink import di
-from domain.account.account_interface import IAccount
 
 user_app = APIBlueprint('user_app', __name__)
 

@@ -20,7 +20,6 @@ class Bootstrap:
     def __init__(self):
         di["database"] = lambda _di: sqlite3.connect("/home/gollum/Project/gollum/var/database.db")
         di[IAccount] = lambda _di: AccountAdapter()
-
         di[IAccess] = lambda _di: AccessAdapter()
         di[IUserModel] = lambda _di: UserModelAdapter(_di["database"])
         di[ISecurity] = lambda _di: SecurityAdapter()

@@ -2,7 +2,6 @@ import unittest
 from kink import di
 from bootstrap import Bootstrap
 from domain.user.user_model_interface import IUserModel
-from domain.user.user_entity import UserEntity
 
 
 class TestUserModel(unittest.TestCase):
