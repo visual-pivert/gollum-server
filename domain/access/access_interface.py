@@ -13,4 +13,16 @@ class IAccess(ABC):
     def generateToken(self, obj: dict) -> str: pass
 
     @abstractmethod
+    def decodeAccessToken(self, access_token: str) -> dict: pass
+
+    @abstractmethod
     def verifyAccessToken(self, access_token: str) -> bool: pass
+
+    @abstractmethod
+    def verifyContributor(self, access_token: str, repo_path: str) -> bool: pass
+
+    @abstractmethod
+    def verifyCreator(self, access_token: str, repo_path: str) -> bool: pass
+
+    @abstractmethod
+    def verifyAdmin(self, access_token: str) -> bool: pass

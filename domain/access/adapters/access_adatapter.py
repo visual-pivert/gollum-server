@@ -8,15 +8,17 @@ from domain.access.exceptions.access_exception import AccessException
 from domain.user.exceptions.user_exception import UserNotFoundException
 from domain.security.security_interface import ISecurity
 from domain.access.exceptions.access_exception import InvalidAccessTokenException
+from domain.contrib.contrib_interface import IContrib
 from kink import inject
 
 
 class AccessAdapter(IAccess):
 
     @inject
-    def __init__(self, user_model: IUserModel, security: ISecurity):
+    def __init__(self, user_model: IUserModel, security: ISecurity, contrib: IContrib):
         self.user_model = user_model
         self.security = security
+        self.contrib = contrib
 
     def accessToken(self, username: str, password: str) -> str:
         try:
@@ -39,6 +41,21 @@ class AccessAdapter(IAccess):
             return True
         raise InvalidAccessTokenException()
 
+    def verifyContributor(self, access_token: str, repo_path: str) -> bool:
+        decoded_access_token = self.decodeAccessToken(access_token)
+        if decoded_access_token["username"] in self.contrib.listContrib(repo_path):
+            return True
+        raise InvalidAccessTokenException()
+
+    def verifyCreator(self, access_token: str, repo_path: str) -> bool:
+        decoded_access_token = self.decodeAccessToken(access_token)
+        if decoded_access_token["username"] == self.contrib.listContrib(repo_path)[0]:
+            return True
+        raise InvalidAccessTokenException()
+
+    def verifyAdmin(self, access_token: str) -> bool:
+        pass
+
     def generateToken(self, obj: dict) -> str:
         timestamp = int(datetime.datetime.now().timestamp())
         obj['_id'] = randint(10000, 99999)
@@ -47,3 +64,6 @@ class AccessAdapter(IAccess):
         jsoned = json.dumps(obj).encode('utf-8')
 
         return base64.urlsafe_b64encode(jsoned).decode('utf-8')
+
+    def decodeAccessToken(self, access_token: str) -> dict:
+        return dict(json.loads(base64.urlsafe_b64decode(access_token).decode('utf-8')))

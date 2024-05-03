@@ -12,6 +12,14 @@ class TestAccess(unittest.TestCase):
         token = access.generateToken({"username": "username", "password": "password"})
         print(token)
 
+    def testDecodeAccessToken(self):
+        bootstrap = Bootstrap()
+        access = di[IAccess]
+
+        token = access.generateToken({"username": "username", "password": "password"})
+        decoded = access.decodeAccessToken(token)
+        print(decoded)
+
     def testAccessToken(self):
         bootstrap = Bootstrap()
         access = di[IAccess]
