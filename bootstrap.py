@@ -14,6 +14,8 @@ from domain.gitolite.gitolite_interface import IGitolite
 from domain.gitolite.adapters.gitolite_adapter import GitoliteAdapter
 from domain.contrib.contrib_interface import IContrib
 from domain.contrib.adapters.contrib_adapter import ContribAdapter
+from domain.repo.repo_interface import IRepo
+from domain.repo.adapters.repo_adapter import RepoAdapter
 
 
 class Bootstrap:
@@ -25,3 +27,4 @@ class Bootstrap:
         di[ISecurity] = lambda _di: SecurityAdapter()
         di[IGitolite] = lambda _di: GitoliteAdapter()
         di[IContrib] = lambda _di: ContribAdapter()
+        di[IRepo] = lambda _di: RepoAdapter()

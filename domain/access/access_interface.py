@@ -25,4 +25,7 @@ class IAccess(ABC):
     def verifyCreator(self, access_token: str, repo_path: str) -> bool: pass
 
     @abstractmethod
+    def verifyCanCreate(self, access_token: str) -> bool: pass
+
+    @abstractmethod
     def verifyAdmin(self, access_token: str) -> bool: pass

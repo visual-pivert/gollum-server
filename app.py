@@ -4,6 +4,7 @@ from bootstrap import Bootstrap
 from domain.access.routes import access_app
 from domain.user.routes import user_app
 from domain.contrib.routes import contrib_app
+from domain.repo.routes import repo_app
 
 app = APIFlask(__name__)
 
@@ -24,3 +25,4 @@ app.register_blueprint(account_app)
 app.register_blueprint(access_app)
 app.register_blueprint(user_app)
 app.register_blueprint(contrib_app)
+app.register_blueprint(repo_app)
