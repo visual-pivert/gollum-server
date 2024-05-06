@@ -16,12 +16,17 @@ class TestRepo(unittest.TestCase):
         repos = repo.getAllRepo()
         print(repos)
 
-    def testAddRepo(self):
+    # def testAddRepo(self):
+    #     bootstrap = Bootstrap()
+    #     repo = di[IRepo]
+    #     repo.addRepo('my_repo', 'username')
+    #     repos = repo.getAllRepo()
+    #     print(repos)
+
+    def testRemoveRepo(self):
         bootstrap = Bootstrap()
         repo = di[IRepo]
-        repo.addRepo('my_repo', 'username')
-        repos = repo.getAllRepo()
-        print(repos)
+        repo.removeRepo('my_project_2')
 
 if __name__ == "__main__":
     unittest.TestCase()

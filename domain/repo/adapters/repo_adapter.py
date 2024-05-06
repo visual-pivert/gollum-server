@@ -35,3 +35,12 @@ class RepoAdapter(IRepo):
         if repo_path in self.getAllRepo():
             raise ExistRepoException()
         self.gitolite.readConfig(self.config_path).addRepo(repo_path, username).applyConfig()
+
+    def removeRepo(self, repo_path: str):
+        if repo_path not in self.getAllRepo():
+            raise RepoNotFoundException()
+        self.gitolite.removeRepo(repo_path).applyConfig()
+
+    def verifyRepoExist(self, repo_path: str):
+        if repo_path not in self.getAllRepo():
+            raise RepoNotFoundException()
