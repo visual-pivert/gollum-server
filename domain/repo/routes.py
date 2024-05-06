@@ -3,7 +3,7 @@ from flask import request
 from kink import di
 from domain.access.access_interface import IAccess
 from domain.repo.repo_interface import IRepo
-from domain.access.decorators.access_decorator import verifyAccessToken, verifyCanCreate
+from domain.access.decorators.access_decorator import verifyAccessToken, verifyCanCreate, verifyCreator
 from domain.repo.schemas.repo_schema import RepoListSchema, RepoInputSchema
 
 repo_app = APIBlueprint('repo_app', __name__)
@@ -33,3 +33,16 @@ def createRepo(json_data):
     username = access.decodeAccessToken(request.headers.get("Access-token"))["username"]
     repo.addRepo(json_data["repo_path"], username)
     return {"message": "Repo created"}
+
+
+@repo_app.delete("/api/repo/remove")
+@repo_app.input(RepoInputSchema)
+@verifyAccessToken
+def deleteRepo(json_data):
+    access = di[IAccess]
+    repo = di[IRepo]
+    repo.verifyRepoExist(json_data['repo_path'])
+    access.verifyCreator(request.headers.get("Access-token"), json_data["repo_path"])
+    repo.removeRepo(json_data["repo_path"])
+    return {"message": "Repo removed"}
+
