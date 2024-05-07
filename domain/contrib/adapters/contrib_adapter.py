@@ -23,7 +23,7 @@ class ContribAdapter(IContrib):
 
     def removeContrib(self, username: str, repo_path: str):
         config_readed = self.gitolite.readConfig(self.config_path)
-        config = config_readed.getConfig()[repo_path]
+        config = config_readed.getConfig(repo_path)
         i = 0
         is_contrib = False
         for conf in config:

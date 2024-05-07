@@ -17,7 +17,7 @@ class IGitolite(ABC):
     @abstractmethod
     def readConfig(self, config_path: str) -> "IGitolite": pass
 
-    def getConfig(self) -> dict: pass
+    def getConfig(self, repo_path: str) -> dict: pass
 
     @abstractmethod
     def applyConfig(self): pass

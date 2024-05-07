@@ -1,4 +1,5 @@
 from domain.gitolite.gitolite_interface import IGitolite
+from domain.repo.exceptions.repo_exception import RepoNotFoundException
 import re
 
 
@@ -46,8 +47,14 @@ class GitoliteAdapter(IGitolite):
         self.config = out
         return self
 
-    def getConfig(self):
-        return self.config
+    def getConfig(self, repo_path: str = ""):
+        if not repo_path:
+            return self.config
+        else:
+            if repo_path in self.config:
+                return self.config[repo_path]
+            else:
+                raise RepoNotFoundException()
 
     def applyConfig(self):
         file = open(self.config_path, "w")
@@ -66,6 +73,8 @@ class GitoliteAdapter(IGitolite):
         return out
 
     def getRules(self, repo_path: str) -> list:
+        if repo_path not in self.config.keys():
+            raise RepoNotFoundException()
         return self.config[repo_path]
 
     def getRepos(self) -> list:
