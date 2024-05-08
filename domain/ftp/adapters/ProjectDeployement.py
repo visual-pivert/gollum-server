@@ -43,15 +43,21 @@ class Ftp(IFtp):
 
 
 class ProjectDeployment(IProjectDeployment):
-    host = '192.168.200.136'
-    user = 'gollum'
-    password = 'gollum'
+    host = None
+    user = None
+    password = None
+    project_dist = None
     dist_tmp = 'project_tmp'
-    project_dist = 'prody/'
 
     def __init__(self, compression: ICompression, ftp: IFtp):
         self.compression = compression
         self.ftp = ftp
+
+    def settingFtpServer(self, host: str, user: str, password: str, directory_dest: str):
+        self.host = host
+        self.user = user
+        self.password = password
+        self.project_dist = directory_dest
 
     def createDecompressScript(self, file_path: str, archive_path: str):
         script = \

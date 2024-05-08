@@ -19,6 +19,9 @@ class IProjectDeployment(ABC):
     def createDecompressScript(self, file_path: str, archive_path: str): pass
 
     @abstractmethod
+    def settingFtpServer(self, host: str, user: str, password: str, directory_dest: str): pass
+
+    @abstractmethod
     def deployProject(self, project_path: str): pass
 
     @abstractmethod

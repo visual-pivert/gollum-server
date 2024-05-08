@@ -31,8 +31,10 @@ class TestCompression(unittest.TestCase):
 
     def testDeployProject(self):
         deploy = ProjectDeployment(Compression(FileManipulation()), Ftp())
-        path = deploy.deployProject('/home/nyr/Pictures/digikam')
-        print(path)
+        deploy.settingFtpServer('192.168.200.136', 'gollum', 'gollum', 'prody/')
+        deploy.deployProject('/home/nyr/Pictures/digikam')
+
+        print('done!!!')
         self.assertTrue(True)
 
     # def testCreateDecompressScript(self):
