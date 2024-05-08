@@ -4,6 +4,7 @@ from kink import di
 from domain.access.access_interface import IAccess
 from domain.repo.repo_interface import IRepo
 from domain.repo.schemas.repo_schema import RepoListSchema, RepoInputSchema
+from domain.repo.repo_working_interface import IRepoWorking
 
 repo_app = APIBlueprint('repo_app', __name__)
 
@@ -56,3 +57,48 @@ def deleteRepo(json_data):
     repo.removeRepo(json_data["repo_path"])
     return {"message": "Repo removed"}
 
+
+# TREE
+@repo_app.get('/api/repo/get/<path:repo_path>/tree/<string:branch>', defaults={'tree_path': ''})
+@repo_app.get("/api/repo/get/<path:repo_path>/tree/<string:branch>/<path:tree_path>")
+def treeRepo(repo_path, branch, tree_path):
+    access = di[IAccess]
+    repo_working = di[IRepoWorking]
+
+    repo_working.setRepoDir('/home/gollum/gollum_repo/')
+    tree = repo_working.getTreeDirectory(repo_path, branch, tree_path)
+    return {"tree": tree}
+
+
+# BLOB
+@repo_app.get("/api/repo/get/<path:repo_path>/blob/<string:branch>/<path:file_path>")
+def blobRepo(repo_path, branch, file_path):
+    access = di[IAccess]
+    repo_working = di[IRepoWorking]
+
+    repo_working.setRepoDir('/home/gollum/gollum_repo/')
+    glob = repo_working.getBlobFile(repo_path, branch, file_path)
+    return {'glob': glob}
+
+
+# EDIT
+@repo_app.post("/api/repo/get/<path:repo_path>/edit/<string:branch>/<path:tree_path>")
+def editRepo(repo_path, tree_path):
+    pass
+
+
+# COMMITS
+@repo_app.get("/api/commits/list/<path:repo_path>")
+def listRepoCommit(repo_path):
+    pass
+
+
+@repo_app.get("/api/commits/last/<path:repo_path>")
+def lastRepoCommit(repo_path):
+    pass
+
+
+# BRANCHES
+@repo_app.get("/api/branches/list/<path:repo_path>")
+def listRepoBranches(repo_path):
+    pass

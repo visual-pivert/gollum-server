@@ -9,4 +9,3 @@ test:
 	# python -m unittest discover -s domain/gitolite/tests
 	# python -m unittest discover -s domain/contrib/tests
 	python -m unittest discover -s domain/repo/tests
-

@@ -16,6 +16,8 @@ from domain.contrib.contrib_interface import IContrib
 from domain.contrib.adapters.contrib_adapter import ContribAdapter
 from domain.repo.repo_interface import IRepo
 from domain.repo.adapters.repo_adapter import RepoAdapter
+from domain.repo.repo_working_interface import IRepoWorking
+from domain.repo.adapters.repo_working_adapter import RepoWorkingAdapter
 
 
 class Bootstrap:
@@ -28,3 +30,4 @@ class Bootstrap:
         di[IGitolite] = lambda _di: GitoliteAdapter()
         di[IContrib] = lambda _di: ContribAdapter()
         di[IRepo] = lambda _di: RepoAdapter()
+        di[IRepoWorking] = lambda  _di: RepoWorkingAdapter()
