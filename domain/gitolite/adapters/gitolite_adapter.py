@@ -3,6 +3,7 @@ from domain.repo.exceptions.repo_exception import RepoNotFoundException
 import re
 from git import Repo
 from os import getenv
+import subprocess
 
 
 class GitoliteAdapter(IGitolite):
@@ -72,10 +73,12 @@ class GitoliteAdapter(IGitolite):
         self.pushConfig()
 
     def pushConfig(self):
-        repo = Repo(getenv("GIT_ADMIN_REPO"))
+        repo_path = getenv("GIT_ADMIN_REPO")
+        password = '1404'
+        repo = Repo(repo_path)
         repo.git.add(update=True)
         repo.index.commit(self.commit_message)
-        repo.git.push()
+        subprocess.run(['sshpass', '-p', password, 'git', '-C', repo_path, 'push'])
 
     def compileConfig(self):
         out = ""
