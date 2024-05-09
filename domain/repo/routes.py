@@ -5,6 +5,7 @@ from domain.access.access_interface import IAccess
 from domain.repo.repo_interface import IRepo
 from domain.repo.schemas.repo_schema import RepoListSchema, RepoInputSchema
 from domain.repo.repo_working_interface import IRepoWorking
+from os import getenv
 
 repo_app = APIBlueprint('repo_app', __name__)
 
@@ -65,7 +66,7 @@ def treeRepo(repo_path, branch, tree_path):
     access = di[IAccess]
     repo_working = di[IRepoWorking]
 
-    repo_working.setRepoDir('/home/gollum/gollum_repo/')
+    repo_working.setRepoDir(getenv("REPO_DIR"))
     tree = repo_working.getTreeDirectory(repo_path, branch, tree_path)
     return {"tree": tree}
 
@@ -76,7 +77,7 @@ def blobRepo(repo_path, branch, file_path):
     access = di[IAccess]
     repo_working = di[IRepoWorking]
 
-    repo_working.setRepoDir('/home/gollum/gollum_repo/')
+    repo_working.setRepoDir(getenv("REPO_DIR"))
     glob = repo_working.getBlobFile(repo_path, branch, file_path)
     return {'glob': glob}
 
