@@ -1,4 +1,6 @@
 from kink import di
+from dotenv import load_dotenv
+from os import getenv
 
 import sqlite3
 
@@ -22,7 +24,9 @@ from domain.repo.adapters.repo_working_adapter import RepoWorkingAdapter
 
 class Bootstrap:
     def __init__(self):
-        di["database"] = lambda _di: sqlite3.connect("/home/gollum/Project/gollum/var/database.db")
+        self.initEnv()
+
+        di["database"] = lambda _di: sqlite3.connect(getenv("DB_PATH"))
         di[IAccount] = lambda _di: AccountAdapter()
         di[IAccess] = lambda _di: AccessAdapter()
         di[IUserModel] = lambda _di: UserModelAdapter(_di["database"])
@@ -30,4 +34,7 @@ class Bootstrap:
         di[IGitolite] = lambda _di: GitoliteAdapter()
         di[IContrib] = lambda _di: ContribAdapter()
         di[IRepo] = lambda _di: RepoAdapter()
-        di[IRepoWorking] = lambda  _di: RepoWorkingAdapter()
+        di[IRepoWorking] = lambda _di: RepoWorkingAdapter()
+
+    def initEnv(self):
+        load_dotenv("env")

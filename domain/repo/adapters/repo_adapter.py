@@ -3,6 +3,7 @@ from domain.repo.repo_interface import IRepo
 from domain.gitolite.gitolite_interface import IGitolite
 from domain.contrib.contrib_interface import IContrib
 from domain.repo.exceptions.repo_exception import ExistRepoException, RepoNotFoundException
+from os import getenv
 
 
 class RepoAdapter(IRepo):
@@ -10,8 +11,7 @@ class RepoAdapter(IRepo):
     @inject
     def __init__(self, gitolite: IGitolite, contrib: IContrib):
         self.gitolite = gitolite
-        self.config_path = "/home/gollum/Project/gollum/var/gitolite_test.conf"
-        self.contrib = contrib
+        self.config_path = getenv("GIT_CONF_PATH")
 
     def getRepoContributedBy(self, username: str) -> [str]:
         config = self.gitolite.readConfig(self.config_path).getConfig()
