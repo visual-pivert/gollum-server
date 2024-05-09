@@ -58,7 +58,7 @@ def deleteRepo(json_data):
     return {"message": "Repo removed"}
 
 
-# TREE
+# @Deprecated
 @repo_app.get('/api/repo/get/<path:repo_path>/tree/<string:branch>', defaults={'tree_path': ''})
 @repo_app.get("/api/repo/get/<path:repo_path>/tree/<string:branch>/<path:tree_path>")
 def treeRepo(repo_path, branch, tree_path):
@@ -70,7 +70,7 @@ def treeRepo(repo_path, branch, tree_path):
     return {"tree": tree}
 
 
-# BLOB
+# @Deprecated
 @repo_app.get("/api/repo/get/<path:repo_path>/blob/<string:branch>/<path:file_path>")
 def blobRepo(repo_path, branch, file_path):
     access = di[IAccess]
@@ -84,21 +84,4 @@ def blobRepo(repo_path, branch, file_path):
 # EDIT
 @repo_app.post("/api/repo/get/<path:repo_path>/edit/<string:branch>/<path:tree_path>")
 def editRepo(repo_path, tree_path):
-    pass
-
-
-# COMMITS
-@repo_app.get("/api/commits/list/<path:repo_path>")
-def listRepoCommit(repo_path):
-    pass
-
-
-@repo_app.get("/api/commits/last/<path:repo_path>")
-def lastRepoCommit(repo_path):
-    pass
-
-
-# BRANCHES
-@repo_app.get("/api/branches/list/<path:repo_path>")
-def listRepoBranches(repo_path):
     pass

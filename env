@@ -1,0 +1,3 @@
+REPO_DIR=/home/gollum/gollum_repo/
+DB_PATH=/home/gollum/Project/gollum/var/database.db
+GIT_CONF_PATH=/home/gollum/Project/gollum/var/gitolite_test.conf
