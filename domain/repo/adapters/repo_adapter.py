@@ -12,6 +12,7 @@ class RepoAdapter(IRepo):
     def __init__(self, gitolite: IGitolite, contrib: IContrib):
         self.gitolite = gitolite
         self.config_path = getenv("GIT_CONF_PATH")
+        self.contrib = contrib
 
     def getRepoContributedBy(self, username: str) -> [str]:
         config = self.gitolite.readConfig(self.config_path).getConfig()

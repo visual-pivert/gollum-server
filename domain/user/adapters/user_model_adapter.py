@@ -5,6 +5,8 @@ from kink import inject
 from sqlite3 import IntegrityError
 import bcrypt
 import datetime
+from os import getenv
+import subprocess
 
 
 class UserModelAdapter(IUserModel):
@@ -64,6 +66,7 @@ class UserModelAdapter(IUserModel):
         try:
             cursor.execute(query, (user.username, timestamp, cyphered_password, user.email, user.username,
                                    user.access_token))
+            subprocess.run(['htpasswd', '-b', '-c', getenv("HTPASSWD_PATH"), user.username, user.password], check=True)
         except IntegrityError as e:
             if 'username' in e.args[0]:
                 raise UsernameNotUniqueException()

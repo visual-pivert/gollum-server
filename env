@@ -1,3 +1,5 @@
-REPO_DIR=/home/gollum/gollum_repo/
-DB_PATH=/home/gollum/Project/gollum/var/database.db
-GIT_CONF_PATH=/home/gollum/Project/gollum/var/gitolite_test.conf
+REPO_DIR=/home/gollum/repositories/
+DB_PATH=/home/gollum/gollum/var/database.db
+GIT_CONF_PATH=/home/gollum/gitolite-admin/conf/gitolite.conf
+GIT_ADMIN_REPO=/home/gollum/gitolite-admin
+HTPASSWD_PATH=/home/gollum/.htpasswd

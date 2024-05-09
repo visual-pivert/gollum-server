@@ -1,6 +1,8 @@
 from domain.gitolite.gitolite_interface import IGitolite
 from domain.repo.exceptions.repo_exception import RepoNotFoundException
 import re
+from git import Repo
+from os import getenv
 
 
 class GitoliteAdapter(IGitolite):
@@ -8,21 +10,27 @@ class GitoliteAdapter(IGitolite):
     def __init__(self):
         self.config = None
         self.config_path = ""
+        self.commit_message = ""
 
     def addRepo(self, repo_path: str, username: str) -> "IGitolite":
         self.config[repo_path] = ["RW+     =   {}".format(username)]
+        self.commit_message += "REPO ADDED: {} create {}\n".format(username, repo_path)
         return self
 
     def addRule(self, repo_path: str, rule: str) -> "IGitolite":
         self.config[repo_path].append(rule)
+        self.commit_message += "RULE ADDED: add {} to {}\n".format(rule, repo_path)
         return self
 
     def removeRule(self, repo_path: str, index: int) -> "IGitolite":
+        the_rule = self.config[repo_path][index]
         self.config[repo_path].pop(index)
+        self.commit_message += "RULE ADDED: remove {} to {}\n".format(the_rule, repo_path)
         return self
 
     def removeRepo(self, repo_path: str) -> "IGitolite":
         self.config.pop(repo_path)
+        self.commit_message += "REPO DELETED: Creator remove {}\n".format(repo_path)
         return self
 
     def readConfig(self, config_path: str) -> "IGitolite":
@@ -61,6 +69,13 @@ class GitoliteAdapter(IGitolite):
         compiled = self.compileConfig()
         file.write(compiled)
         file.close()
+        self.pushConfig()
+
+    def pushConfig(self):
+        repo = Repo(getenv("GIT_ADMIN_REPO"))
+        repo.git.add(update=True)
+        repo.index.commit(self.commit_message)
+        repo.git.push()
 
     def compileConfig(self):
         out = ""

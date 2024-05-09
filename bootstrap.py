@@ -26,7 +26,7 @@ class Bootstrap:
     def __init__(self):
         self.initEnv()
 
-        di["database"] = lambda _di: sqlite3.connect(getenv("DB_PATH"))
+        di["database"] = lambda _di: sqlite3.connect(getenv("DB_PATH"), check_same_thread=False)
         di[IAccount] = lambda _di: AccountAdapter()
         di[IAccess] = lambda _di: AccessAdapter()
         di[IUserModel] = lambda _di: UserModelAdapter(_di["database"])
