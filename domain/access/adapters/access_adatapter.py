@@ -50,6 +50,7 @@ class AccessAdapter(IAccess):
     # cette fonction permet de verifier si la personne est le creator du repo
     def verifyCreator(self, access_token: str, repo_path: str) -> bool:
         decoded_access_token = self.decodeAccessToken(access_token)
+        print(self.contrib.listContrib(repo_path))
         if decoded_access_token["username"] == self.contrib.listContrib(repo_path)[0]:
             return True
         raise InvalidAccessTokenException()

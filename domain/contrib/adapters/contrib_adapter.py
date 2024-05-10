@@ -38,7 +38,7 @@ class ContribAdapter(IContrib):
 
     def listContrib(self, repo_path: str):
         config_readed = self.gitolite.readConfig(self.config_path)
-        rules = list(map(lambda el: el.split(" ")[-1], config_readed.getRules(repo_path)))
+        rules = list(map(lambda el: el.split()[-1], config_readed.getRules(repo_path)))
         if not rules:
             raise ContribNotFoundException()
         return rules

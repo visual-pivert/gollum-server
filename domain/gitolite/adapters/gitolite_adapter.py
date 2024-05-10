@@ -2,7 +2,8 @@ from domain.gitolite.gitolite_interface import IGitolite
 from domain.repo.exceptions.repo_exception import RepoNotFoundException
 import re
 from git import Repo
-from os import getenv
+from os import getenv, chmod
+import shutil
 import subprocess
 
 
@@ -14,7 +15,7 @@ class GitoliteAdapter(IGitolite):
         self.commit_message = ""
 
     def addRepo(self, repo_path: str, username: str) -> "IGitolite":
-        self.config[repo_path] = ["RW+     =   {}".format(username)]
+        self.config[repo_path] = ["RW+ 	= 	{}".format(username)]
         self.commit_message += "REPO ADDED: {} create {}\n".format(username, repo_path)
         return self
 
@@ -31,6 +32,11 @@ class GitoliteAdapter(IGitolite):
 
     def removeRepo(self, repo_path: str) -> "IGitolite":
         self.config.pop(repo_path)
+        
+        # Suppression du depot git
+        repo_dir = getenv("REPO_DIR")
+        shutil.rmtree(repo_dir + repo_path + ".git")
+        
         self.commit_message += "REPO DELETED: Creator remove {}\n".format(repo_path)
         return self
 
@@ -70,11 +76,17 @@ class GitoliteAdapter(IGitolite):
         compiled = self.compileConfig()
         file.write(compiled)
         file.close()
-        self.pushConfig()
+        
+        subprocess.run(['gitolite', 'setup'])
+        subprocess.run(['chmod', '777', '-R', getenv('GIT_COMPILED_CONF_PATH')])
+        subprocess.run(['chmod', '777', '-R', getenv('REPO_DIR')])
+        
+        #self.pushConfig()
+        
 
     def pushConfig(self):
         repo_path = getenv("GIT_ADMIN_REPO")
-        password = '1404'
+        password = getenv("USER_PASS")
         repo = Repo(repo_path)
         repo.git.add(update=True)
         repo.index.commit(self.commit_message)
