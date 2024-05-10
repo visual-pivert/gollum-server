@@ -90,7 +90,7 @@ class GitoliteAdapter(IGitolite):
         repo = Repo(repo_path)
         repo.git.add(update=True)
         repo.index.commit(self.commit_message)
-        subprocess.run(['sshpass', '-p', password, 'git', '-C', repo_path, 'push'])
+        subprocess.run(['sshpass', '-p', password, 'git', '-c','-B','-b', repo_path, 'push'])
 
     def compileConfig(self):
         out = ""

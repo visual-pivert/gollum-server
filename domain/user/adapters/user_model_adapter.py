@@ -66,7 +66,7 @@ class UserModelAdapter(IUserModel):
         try:
             cursor.execute(query, (user.username, timestamp, cyphered_password, user.email, user.username,
                                    user.can_create ,user.access_token))
-            subprocess.run(['htpasswd', '-b', '-c', getenv("HTPASSWD_PATH"), user.username, user.password], check=True)
+            subprocess.run(['htpasswd', '-b', '-B', getenv("HTPASSWD_PATH"), user.username, user.password], check=True)
         except IntegrityError as e:
             if 'username' in e.args[0]:
                 raise UsernameNotUniqueException()
