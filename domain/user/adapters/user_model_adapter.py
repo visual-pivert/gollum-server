@@ -58,14 +58,14 @@ class UserModelAdapter(IUserModel):
     def addUser(self, user: UserEntity) -> int:
         connector = self.database
         cursor = connector.cursor()
-        query = "INSERT INTO Users(username, created_at, password, email, slug, access_token) VALUES(?, ?, ?, ?, ?, ?)"
+        query = "INSERT INTO Users(username, created_at, password, email, slug, can_create, access_token) VALUES(?, ?, ?, ?, ?, ?, ?)"
         timestamp = datetime.datetime.now().timestamp()
 
         # cyphered_password -> str
         cyphered_password = bcrypt.hashpw(user.password.encode('utf8'), bcrypt.gensalt()).decode("utf-8")
         try:
             cursor.execute(query, (user.username, timestamp, cyphered_password, user.email, user.username,
-                                   user.access_token))
+                                   user.can_create ,user.access_token))
             subprocess.run(['htpasswd', '-b', '-c', getenv("HTPASSWD_PATH"), user.username, user.password], check=True)
         except IntegrityError as e:
             if 'username' in e.args[0]:
@@ -95,6 +95,7 @@ class UserModelAdapter(IUserModel):
         user.password = user_data[3] if 3 in range(len(user_data)) else None
         user.email = user_data[4] if 4 in range(len(user_data)) else None
         user.slug = user_data[5] if 5 in range(len(user_data)) else None
-        user.access_token = user_data[6] if 6 in range(len(user_data)) else None
+        user.can_create = user_data[6] if 6 in range(len(user_data)) else None
+        user.access_token = user_data[7] if 7 in range(len(user_data)) else None
         user.meta = user_metadata
         return user

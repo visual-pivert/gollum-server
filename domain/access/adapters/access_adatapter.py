@@ -37,7 +37,8 @@ class AccessAdapter(IAccess):
             self.user_model.updateAccessToken(user.username, None)
 
     def verifyAccessToken(self, access_token: str) -> bool:
-        if access_token:
+        decoded_access_token = self.decodeAccessToken(access_token)
+        if 'username' in decoded_access_token.keys():
             return True
         raise InvalidAccessTokenException()
 
@@ -59,11 +60,19 @@ class AccessAdapter(IAccess):
     # TODO: mettre en place lorsque le base de donnée est modifier
     def verifyCanCreate(self, access_token:str):
         decoded_access_token = self.decodeAccessToken(access_token)
-        return True
+        user = self.user_model.getUserBy('username', decoded_access_token['username'])
+        if user.can_create > 0:
+            return True
+        raise InvalidAccessTokenException()
 
 
     def verifyAdmin(self, access_token: str) -> bool:
-        pass
+        decoded_access_token = self.decodeAccessToken(access_token)
+        user = self.user_model.getUserBy('username', decoded_access_token['username'])
+        if user.can_create >= 2:
+            return True
+        raise InvalidAccessTokenException()
+
 
     def generateToken(self, obj: dict) -> str:
         timestamp = int(datetime.datetime.now().timestamp())

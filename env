@@ -1,5 +1,5 @@
 REPO_DIR=/home/gollum/repositories/
-DB_PATH=/home/gollum/gollum/var/database.db
+DB_PATH=/home/gollum/gollum/var/database2.db
 GIT_CONF_PATH=/home/gollum/.gitolite/conf/gitolite.conf
 GIT_ADMIN_REPO=/home/gollum/gitolite-admin
 HTPASSWD_PATH=/home/gollum/.htpasswd

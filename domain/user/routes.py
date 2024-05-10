@@ -40,6 +40,7 @@ def deleteUser(json_data):
     # Verification
     access_token = request.headers.get("Access-token")
     access.verifyAccessToken(access_token)
+    access.verifyAdmin(access_token)
 
     user_model.deleteUserBy('username', json_data['username'])
     return {"message": "User deleted"}

@@ -15,7 +15,7 @@ class GitoliteAdapter(IGitolite):
         self.commit_message = ""
 
     def addRepo(self, repo_path: str, username: str) -> "IGitolite":
-        self.config[repo_path] = ["RW+ 	= 	{}".format(username)]
+        self.config[username + "/" + repo_path] = ["RW+ 	= 	{}".format(username)]
         self.commit_message += "REPO ADDED: {} create {}\n".format(username, repo_path)
         return self
 

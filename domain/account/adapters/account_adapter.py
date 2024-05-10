@@ -17,6 +17,7 @@ class AccountAdapter(IAccount):
         new_user.password = account.password
         new_user.email = account.email
         new_user.slug = account.username
+        new_user.can_create = 1 # TODO: Ceci est a modifier
         new_user.access_token = None
 
         last_id = self.user_model.addUser(new_user)
