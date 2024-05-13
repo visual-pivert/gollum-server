@@ -25,7 +25,7 @@ def listRepoContributedByUser():
     out_repos = []
     for r in the_repos:
         out_repos.append({'repo_path': r})
-    return {"repos": out_repos}
+    return {"repos": out_repos, "status_code": 200}
 
 
 @repo_app.post("/api/repo/create")
@@ -40,8 +40,8 @@ def createRepo(json_data):
     access.verifyCanCreate(access_token)
 
     username = access.decodeAccessToken(access_token)["username"]
-    repo.addRepo(json_data["repo_path"], username)
-    return {"message": "Repo created"}
+    repo.addRepo(username + "/" + json_data["repo_path"], username)
+    return {"message": "Repo created", "status_code": 201}
 
 
 @repo_app.delete("/api/repo/delete")
@@ -53,10 +53,12 @@ def deleteRepo(json_data):
     # Verification
     access_token = request.headers.get("Access-token")
     access.verifyAccessToken(access_token)
-    access.verifyCreator(access_token, json_data["repo_path"])
+    
+    username = access.decodeAccessToken(access_token)["username"]
+    access.verifyCreator(access_token, username + "/" + json_data["repo_path"])
 
-    repo.removeRepo(json_data["repo_path"])
-    return {"message": "Repo removed"}
+    repo.removeRepo(username + "/" + json_data["repo_path"])
+    return {"message": "Repo removed", "status_code": 200}
 
 
 # @Deprecated
@@ -68,7 +70,7 @@ def treeRepo(repo_path, branch, tree_path):
 
     repo_working.setRepoDir(getenv("REPO_DIR"))
     tree = repo_working.getTreeDirectory(repo_path, branch, tree_path)
-    return {"tree": tree}
+    return {"tree": tree, "status_code": 200}
 
 
 # @Deprecated
@@ -79,7 +81,7 @@ def blobRepo(repo_path, branch, file_path):
 
     repo_working.setRepoDir(getenv("REPO_DIR"))
     glob = repo_working.getBlobFile(repo_path, branch, file_path)
-    return {'glob': glob}
+    return {'glob': glob, "status_code": 200}
 
 
 # EDIT

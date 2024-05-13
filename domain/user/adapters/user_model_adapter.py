@@ -68,7 +68,7 @@ class UserModelAdapter(IUserModel):
                                    user.can_create ,user.access_token))
             subprocess.run(['htpasswd', '-b', '-B', getenv("HTPASSWD_PATH"), user.username, user.password], check=True)
         except IntegrityError as e:
-            if 'username' in e.args[0]:
+            if 'username' in e.args[0] or 'slug' in e.args[0]:
                 raise UsernameNotUniqueException()
             if 'email' in e.args[0]:
                 raise EmailNotUniqueException()

@@ -23,7 +23,7 @@ def listContributors(repo_path):
     out = []
     for contrib in contrib_list:
         out.append({"username": contrib})
-    return {"contributors": out}
+    return {"contributors": out, "status_code": 200}
 
 
 @contrib_app.post("/api/contributors/add/<path:repo_path>")
@@ -38,7 +38,7 @@ def addContributor(repo_path, json_data):
     access.verifyCreator(access_token, repo_path)
 
     contrib.addContrib(json_data['username'], repo_path)
-    return {"message": "Contributor added"}
+    return {"message": "Contributor added", "status_code": 201}
 
 
 @contrib_app.delete("/api/contributors/delete/<path:repo_path>")
@@ -53,4 +53,4 @@ def deleteContributor(repo_path, json_data):
     access.verifyCreator(access_token, repo_path)
 
     contrib.removeContrib(json_data['username'], repo_path)
-    return {"message": "Contributor removed"}
+    return {"message": "Contributor removed", "status_code": 200}

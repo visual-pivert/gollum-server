@@ -14,8 +14,9 @@ def access(json_data):
     access_token = access.accessToken(json_data['username'], json_data['password'])
     if access_token:
         out = {
-            'username': json_data['username'],
-            'access_token': access_token
+            "username": json_data['username'],
+            "access_token": access_token,
+            "status_code": 200
         }
         return out
     return abort(401)
@@ -27,6 +28,6 @@ def revoke():
     access_token = request.headers.get('Access-token')
     if access_token:
         access.revokeAccessToken(access_token)
-        return {"message": "Token revoked"}
+        return {"message": "Token revoked", "status_code": 200}
     return{"message": "No token revoked"}
 

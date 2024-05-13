@@ -15,7 +15,7 @@ class GitoliteAdapter(IGitolite):
         self.commit_message = ""
 
     def addRepo(self, repo_path: str, username: str) -> "IGitolite":
-        self.config[username + "/" + repo_path] = ["RW+ 	= 	{}".format(username)]
+        self.config[repo_path] = ["RW+ 	= 	{}".format(username)]
         self.commit_message += "REPO ADDED: {} create {}\n".format(username, repo_path)
         return self
 
@@ -90,7 +90,7 @@ class GitoliteAdapter(IGitolite):
         repo = Repo(repo_path)
         repo.git.add(update=True)
         repo.index.commit(self.commit_message)
-        subprocess.run(['sshpass', '-p', password, 'git', '-c','-B','-b', repo_path, 'push'])
+        subprocess.run(['sshpass', '-p', password, 'git', '-C', repo_path, 'push'])
 
     def compileConfig(self):
         out = ""
