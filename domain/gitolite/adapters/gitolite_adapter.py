@@ -27,7 +27,9 @@ class GitoliteAdapter(IGitolite):
     def removeRule(self, repo_path: str, index: int) -> "IGitolite":
         the_rule = self.config[repo_path][index]
         self.config[repo_path].pop(index)
-        self.commit_message += "RULE ADDED: remove {} to {}\n".format(the_rule, repo_path)
+        if not self.config[repo_path]:
+            self.removeRepo(repo_path)
+        self.commit_message += "RULE REMOVED: remove {} to {}\n".format(the_rule, repo_path)
         return self
 
     def removeRepo(self, repo_path: str) -> "IGitolite":
@@ -37,7 +39,7 @@ class GitoliteAdapter(IGitolite):
         repo_dir = getenv("REPO_DIR")
         shutil.rmtree(repo_dir + repo_path + ".git")
         
-        self.commit_message += "REPO DELETED: Creator remove {}\n".format(repo_path)
+        self.commit_message += "REPO REMOVED: Creator remove {}\n".format(repo_path)
         return self
 
     def readConfig(self, config_path: str) -> "IGitolite":

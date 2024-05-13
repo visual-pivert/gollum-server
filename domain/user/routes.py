@@ -27,7 +27,7 @@ def listUser():
             'email': user.email,
             'slug': user.slug
         })
-    return {"users": out, "status_code": 200}
+    return {"users": out, "status_code": 200, "message": "OK"}
 
 
 @user_app.delete("/api/users/delete")
@@ -43,7 +43,7 @@ def deleteUser(json_data):
     access.verifyAdmin(access_token)
 
     user_model.deleteUserBy('username', json_data['username'])
-    return {"message": "User deleted", "status_code": 200}
+    return {"message": "User removed", "status_code": 200}
 
 
 @user_app.get("/api/users/get/<string:user_slug>")
@@ -57,4 +57,4 @@ def getUser(user_slug):
     access.verifyAccessToken(access_token)
 
     user = user_model.getUserBy('slug', user_slug)
-    return {'username': user.username, 'slug': user.slug, 'email': user.email, "status_code": 200}
+    return {'username': user.username, 'slug': user.slug, 'email': user.email, "status_code": 200, "message": "OK"}

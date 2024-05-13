@@ -12,22 +12,21 @@ access_app = APIBlueprint('access_app', __name__)
 def access(json_data):
     access = di[IAccess]
     access_token = access.accessToken(json_data['username'], json_data['password'])
-    if access_token:
-        out = {
-            "username": json_data['username'],
-            "access_token": access_token,
-            "status_code": 200
-        }
-        return out
-    return abort(401)
+    access.verifyAccessToken(access_token)
+    out = {
+        "username": json_data['username'],
+        "access_token": access_token,
+        "status_code": 200,
+        "message": "OK"
+    }
+    return out
 
 
 @access_app.get("/api/revoke")
 def revoke():
     access = di[IAccess]
     access_token = request.headers.get('Access-token')
-    if access_token:
-        access.revokeAccessToken(access_token)
-        return {"message": "Token revoked", "status_code": 200}
-    return{"message": "No token revoked"}
+    access.verifyAccessToken(access_token)
+    access.revokeAccessToken(access_token)
+    return {"message": "Token revoked", "status_code": 200}
 

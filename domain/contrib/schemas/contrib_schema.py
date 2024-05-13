@@ -9,8 +9,10 @@ class ContribInputSchema(Schema):
 class ContribOutputSchema(Schema):
     username = String()
     status_code = Integer()
+    message = String()
 
 
 class ContribListSchema(Schema):
     contributors = List(Nested(ContribOutputSchema))
     status_code = Integer()
+    message = String()

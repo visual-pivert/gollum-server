@@ -5,6 +5,7 @@ from apiflask.fields import String, Nested, List, Integer
 class RepoOutputSchema(Schema):
     repo_path = String()
     status_code = Integer()
+    message = String()
 
 
 class RepoInputSchema(Schema):
@@ -14,3 +15,4 @@ class RepoInputSchema(Schema):
 class RepoListSchema(Schema):
     repos = List(Nested(RepoOutputSchema))
     status_code = Integer()
+    message = String()
