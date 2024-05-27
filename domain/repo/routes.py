@@ -68,6 +68,11 @@ def treeRepo(repo_path, branch, tree_path):
     access = di[IAccess]
     repo_working = di[IRepoWorking]
 
+    # Verification
+    access_token = request.headers.get("Access-Token")
+    access.verifyAccessToken(access_token)
+    access.verifyContributor(access_token, repo_path)
+
     repo_working.setRepoDir(getenv("REPO_DIR"))
     tree = repo_working.getTreeDirectory(repo_path, branch, tree_path)
     return {"tree": tree, "status_code": 200, "message": "OK"}
@@ -80,8 +85,8 @@ def blobRepo(repo_path, branch, file_path):
     repo_working = di[IRepoWorking]
 
     repo_working.setRepoDir(getenv("REPO_DIR"))
-    glob = repo_working.getBlobFile(repo_path, branch, file_path)
-    return {'glob': glob, "status_code": 200, "message": "OK"}
+    blob = repo_working.getBlobFile(repo_path, branch, file_path)
+    return {'blob': blob, "status_code": 200, "message": "OK"}
 
 
 # EDIT

@@ -27,8 +27,11 @@ class GitoliteAdapter(IGitolite):
     def removeRule(self, repo_path: str, index: int) -> "IGitolite":
         the_rule = self.config[repo_path][index]
         self.config[repo_path].pop(index)
+
+        # Si le depot n'a plus de rule on le supprime
         if not self.config[repo_path]:
             self.removeRepo(repo_path)
+            
         self.commit_message += "RULE REMOVED: remove {} to {}\n".format(the_rule, repo_path)
         return self
 
