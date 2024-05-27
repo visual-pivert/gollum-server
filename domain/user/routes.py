@@ -27,7 +27,7 @@ def listUser():
             'email': user.email,
             'slug': user.slug
         })
-    return {"users": out, "status_code": 200, "message": "OK"}
+    return {"datas": out, "status_code": 200, "message": "OK"}
 
 
 @user_app.delete("/api/users/delete")
@@ -47,7 +47,7 @@ def deleteUser(json_data):
 
 
 @user_app.get("/api/users/get/<string:user_slug>")
-@user_app.output(UserOutputSchema)
+# @user_app.output(UserOutputSchema)
 def getUser(user_slug):
     user_model = di[IUserModel]
     access = di[IAccess]
@@ -57,4 +57,11 @@ def getUser(user_slug):
     access.verifyAccessToken(access_token)
 
     user = user_model.getUserBy('slug', user_slug)
-    return {'username': user.username, 'slug': user.slug, 'email': user.email, "status_code": 200, "message": "OK"}
+    return {
+        "datas": {
+            "username": user.username,
+            "slug": user.slug,
+            "email": user.email
+        },
+        "status_code": 200, "message": "OK"
+    }

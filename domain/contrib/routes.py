@@ -23,7 +23,11 @@ def listContributors(repo_path):
     out = []
     for contrib in contrib_list:
         out.append({"username": contrib})
-    return {"contributors": out, "status_code": 200, "message": "OK"}
+    return {
+        "datas": out,
+        "status_code": 200, 
+        "message": "OK"
+    }
 
 
 @contrib_app.post("/api/contributors/add/<path:repo_path>")

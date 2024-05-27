@@ -13,4 +13,4 @@ class UserOutputSchema(Schema):
 
 
 class UserListSchema(Schema):
-    users = List(Nested(UserOutputSchema))
+    datas = List(Nested(UserOutputSchema))

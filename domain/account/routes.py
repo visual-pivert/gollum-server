@@ -17,4 +17,10 @@ def signup(json_data):
     account_entity.password = json_data["password"]
     account_entity.email = json_data["email"]
     id = account.createAccount(account_entity)
-    return {"username": account_entity.username, "status_code": 201, "message": "User created"}
+    return {
+        "datas": {
+            "username": account_entity.username
+        }, 
+        "status_code": 201, 
+        "message": "User created"
+    }

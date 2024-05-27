@@ -13,6 +13,6 @@ class ContribOutputSchema(Schema):
 
 
 class ContribListSchema(Schema):
-    contributors = List(Nested(ContribOutputSchema))
+    datas = List(Nested(ContribOutputSchema))
     status_code = Integer()
     message = String()

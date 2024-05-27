@@ -25,7 +25,7 @@ def listRepoContributedByUser():
     out_repos = []
     for r in the_repos:
         out_repos.append({'repo_path': r})
-    return {"repos": out_repos, "status_code": 200, "message": "OK"}
+    return {"datas": out_repos, "status_code": 200, "message": "OK"}
 
 
 @repo_app.post("/api/repo/create")
@@ -75,7 +75,7 @@ def treeRepo(repo_path, branch, tree_path):
 
     repo_working.setRepoDir(getenv("REPO_DIR"))
     tree = repo_working.getTreeDirectory(repo_path, branch, tree_path)
-    return {"tree": tree, "status_code": 200, "message": "OK"}
+    return {"datas": tree, "status_code": 200, "message": "OK"}
 
 
 # @Deprecated
@@ -86,7 +86,7 @@ def blobRepo(repo_path, branch, file_path):
 
     repo_working.setRepoDir(getenv("REPO_DIR"))
     blob = repo_working.getBlobFile(repo_path, branch, file_path)
-    return {'blob': blob, "status_code": 200, "message": "OK"}
+    return {'datas': blob, "status_code": 200, "message": "OK"}
 
 
 # EDIT
