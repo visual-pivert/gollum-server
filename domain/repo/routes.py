@@ -84,6 +84,11 @@ def blobRepo(repo_path, branch, file_path):
     access = di[IAccess]
     repo_working = di[IRepoWorking]
 
+    # Verification
+    access_token = request.headers.get("Access-Token")
+    access.verifyAccessToken(access_token)
+    access.verifyContributor(access_token, repo_path)
+
     repo_working.setRepoDir(getenv("REPO_DIR"))
     blob = repo_working.getBlobFile(repo_path, branch, file_path)
     return {'datas': blob, "status_code": 200, "message": "OK"}
@@ -93,3 +98,21 @@ def blobRepo(repo_path, branch, file_path):
 @repo_app.post("/api/repo/get/<path:repo_path>/edit/<string:branch>/<path:tree_path>")
 def editRepo(repo_path, tree_path):
     pass
+
+@repo_app.get("/api/repo/branches/<path:repo_path>")
+def listBranch(repo_path):
+    access = di[IAccess]
+    repo_working = di[IRepoWorking]
+
+    # Verification
+    access_token = request.headers.get("Access-Token")
+    access.verifyAccessToken(access_token)
+    access.verifyContributor(access_token, repo_path)
+
+    repo_working.setRepoDir(getenv("REPO_DIR"))
+    branch_list = repo_working.listBranches(repo_path)
+    out_branch = []
+    for branch in branch_list:
+        out_branch.append({'branch_name': branch})
+
+    return { 'datas': out_branch, "status_code": 200, "message": "OK"}

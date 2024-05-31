@@ -15,10 +15,12 @@ class RepoWorkingAdapter(IRepoWorking):
             if not dir_path:
                 config_files = repo.git.execute(['git', 'ls-tree', branch_name]).split('\n')
             else:
-                config_files = repo.git.execute(['git', 'ls-tree', "{}:{}".format(branch_name, dir_path), '--name-only']).split()
+                config_files = repo.git.execute(['git', 'ls-tree', "{}:{}".format(branch_name, dir_path)]).split('\n')
             out = []
             for config_file in config_files:
                 splitted = config_file.split()
+                print("+++++++++++++++")
+                print(splitted)
                 out.append({ 'name': splitted[3], 'type': splitted[1] })
             return out
         except GitCommandError:
@@ -49,7 +51,9 @@ class RepoWorkingAdapter(IRepoWorking):
 
     # @Deprecated
     def listBranches(self, repo_path: str) -> list:
-        pass
+        repo = Repo(self.mpath(repo_path))
+        out = repo.git.branch().replace('* ','').strip().split('\n')
+        return out
 
     def setRepoDir(self, repo_dir: str) -> IRepoWorking:
         self.repo_dir = repo_dir

@@ -13,6 +13,6 @@ class RepoInputSchema(Schema):
 
 
 class RepoListSchema(Schema):
-    repos = List(Nested(RepoOutputSchema))
+    datas = List(Nested(RepoOutputSchema))
     status_code = Integer()
     message = String()
