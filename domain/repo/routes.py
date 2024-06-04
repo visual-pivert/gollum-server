@@ -11,7 +11,6 @@ repo_app = APIBlueprint('repo_app', __name__)
 
 
 @repo_app.get("/api/repo/list")
-@repo_app.output(RepoListSchema)
 def listRepoContributedByUser():
     repo = di[IRepo]
     access = di[IAccess]
@@ -91,7 +90,7 @@ def blobRepo(repo_path, branch, file_path):
 
     repo_working.setRepoDir(getenv("REPO_DIR"))
     blob = repo_working.getBlobFile(repo_path, branch, file_path)
-    return {'datas': blob, "status_code": 200, "message": "OK"}
+    return {'datas': {'blob': blob}, "status_code": 200, "message": "OK"}
 
 
 # EDIT

@@ -17,9 +17,12 @@ def signup(json_data):
     account_entity.password = json_data["password"]
     account_entity.email = json_data["email"]
     id = account.createAccount(account_entity)
+    # TODO: changer le slug par ce qui est dams la base
     return {
         "datas": {
-            "username": account_entity.username
+            "username": account_entity.username,
+            "email": account_entity.email,
+            "slug": account_entity.username 
         }, 
         "status_code": 201, 
         "message": "User created"
