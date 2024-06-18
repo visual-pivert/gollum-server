@@ -21,7 +21,7 @@ class RepoWorkingAdapter(IRepoWorking):
                 splitted = config_file.split()
                 print("+++++++++++++++")
                 print(splitted)
-                out.append({ 'name': splitted[3], 'type': splitted[1] })
+                out.append({ 'name': ' '.join(splitted[3:]), 'type': splitted[1] })
             return out
         except GitCommandError:
             raise CommandErrorException()
@@ -45,9 +45,24 @@ class RepoWorkingAdapter(IRepoWorking):
     def listCommit(self, repo_path: str, branch: str) -> list:
         repo = Repo(self.mpath(repo_path))
         out = repo.git.execute(
-            ['git', 'log', "--oneline"]
+            ['git', 'log', branch,'--pretty=format:%H%x00%ad%x00%s%x00%D%x00%b%x00%an%x00%ae', '--date=iso-strict']
         )
-        return out
+        commits = []
+        for line in out.split('\n'):
+            if line.strip():  # Ignorer les lignes vides
+                parts = line.split('\x00')
+                commit = {
+                    "hash": parts[0],
+                    "date": parts[1],
+                    "message": parts[2],
+                    "refs": parts[3],
+                    "body": parts[4],
+                    "author_name": parts[5],
+                    "author_email": parts[6]
+                }
+                commits.append(commit)
+        
+        return commits
 
     # @Deprecated
     def listBranches(self, repo_path: str) -> list:

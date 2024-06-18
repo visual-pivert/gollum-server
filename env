@@ -4,4 +4,5 @@ GIT_CONF_PATH=/home/gollum/.gitolite/conf/gitolite.conf
 GIT_ADMIN_REPO=/home/gollum/gitolite-admin
 HTPASSWD_PATH=/home/gollum/.htpasswd
 GIT_COMPILED_CONF_PATH=/home/gollum/.gitolite
+BIN_PATH=/home/gollum/bin
 USER_PASS=1404

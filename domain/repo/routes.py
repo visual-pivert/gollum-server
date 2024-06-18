@@ -115,3 +115,18 @@ def listBranch(repo_path):
         out_branch.append({'branch_name': branch})
 
     return { 'datas': out_branch, "status_code": 200, "message": "OK"}
+
+
+@repo_app.get('/api/repo/log/<path:repo_path>/branch/<string:branch>')
+def listLog(repo_path, branch):
+    access = di[IAccess]
+    repo_working = di[IRepoWorking]
+
+    #verification
+    access_token = request.headers.get('Access-Token')
+    access.verifyAccessToken(access_token)
+    access.verifyContributor(access_token, repo_path)
+
+    repo_working.setRepoDir(getenv("REPO_DIR"))
+    log_list = repo_working.listCommit(repo_path, branch)
+    return { 'datas': log_list, "status_code": 200, "message": "OK" }

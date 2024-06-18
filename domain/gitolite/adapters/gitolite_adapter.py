@@ -82,9 +82,9 @@ class GitoliteAdapter(IGitolite):
         file.write(compiled)
         file.close()
         
-        subprocess.run(['gitolite', 'setup'])
-        subprocess.run(['chmod', '777', '-R', getenv('GIT_COMPILED_CONF_PATH')])
-        subprocess.run(['chmod', '777', '-R', getenv('REPO_DIR')])
+        subprocess.run([getenv('BIN_PATH') + '/gitolite', 'setup'])
+        subprocess.run(['sudo', 'chmod', '777', '-R', getenv('GIT_COMPILED_CONF_PATH')])
+        subprocess.run(['sudo', 'chmod', '777', '-R', getenv('REPO_DIR')])
         
         #self.pushConfig()
         

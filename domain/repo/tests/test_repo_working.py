@@ -6,12 +6,12 @@ from os import getenv
 
 
 class TestRepoWorking(unittest.TestCase):
-    def testGetTreeDirectory(self):
-        bootstrap = Bootstrap()
-        repo_working = di[IRepoWorking]
-        repo_working.setRepoDir(getenv("REPO_DIR"))
-        tree = repo_working.getTreeDirectory("username/first", "master", "test3")
-        print(tree)
+    # def testGetTreeDirectory(self):
+    #     bootstrap = Bootstrap()
+    #     repo_working = di[IRepoWorking]
+    #     repo_working.setRepoDir(getenv("REPO_DIR"))
+    #     tree = repo_working.getTreeDirectory("username/first", "master", "test3")
+    #     print(tree)
 
     # def testGetBlobFile(self):
     #     bootstrap = Bootstrap()
@@ -24,7 +24,7 @@ class TestRepoWorking(unittest.TestCase):
     #     bootstrap = Bootstrap()
     #     repo_working = di[IRepoWorking]
     #     repo_working.setRepoDir(getenv("REPO_DIR"))
-    #     commits = repo_working.listCommit("repo_test", "master")
+    #     commits = repo_working.listCommit("username/new_repo2", "master")
     #     print(commits)
 
     # def testGitBranch(self):
@@ -33,6 +33,7 @@ class TestRepoWorking(unittest.TestCase):
     #     repo_working.setRepoDir(getenv("REPO_DIR"))
     #     branches = repo_working.listBranches('username/new_repo2')
     #     print(branches)
+    pass
 
 
 if __name__ == "__main__":

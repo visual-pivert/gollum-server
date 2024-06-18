@@ -11,6 +11,7 @@ class IRepoWorking(ABC):
 
     @abstractmethod
     def editFile(self, repo_path: str, branch_name: str, file_path: str): pass
+
     @abstractmethod
     def listCommit(self, repo_path: str, branch: str) -> list: pass
 
@@ -18,5 +19,5 @@ class IRepoWorking(ABC):
     def listBranches(self, repo_path: str) -> list: pass
 
     @abstractmethod
-    def setRepoDir(self, repo_dir: str) -> "IRepoWorking": pass
+    def setRepoDir(self, repo_dir: str) -> "IRepoWorking": pass    
 
