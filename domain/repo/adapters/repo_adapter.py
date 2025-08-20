@@ -5,7 +5,6 @@ from domain.contrib.contrib_interface import IContrib
 from domain.repo.exceptions.repo_exception import ExistRepoException, RepoNotFoundException
 from os import getenv
 
-
 class RepoAdapter(IRepo):
 
     @inject
@@ -36,6 +35,7 @@ class RepoAdapter(IRepo):
         if repo_path in self.getAllRepo():
             raise ExistRepoException()
         self.gitolite.readConfig(self.config_path).addRepo(repo_path, username).applyConfig()
+
 
     def removeRepo(self, repo_path: str):
         if repo_path not in self.getAllRepo():

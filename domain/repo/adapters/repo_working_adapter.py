@@ -66,9 +66,16 @@ class RepoWorkingAdapter(IRepoWorking):
 
     # @Deprecated
     def listBranches(self, repo_path: str) -> list:
+        print(repo_path)
         repo = Repo(self.mpath(repo_path))
-        out = repo.git.branch().replace('* ','').strip().split('\n')
-        return out
+        try:
+            repo.git.fetch("--all")
+            out = repo.git.branch().replace('* ','').strip().split('\n')
+            return [b for b in out if b]
+        except GitCommandError as e:
+            if "Failed to resolve HEAD" in str(e):
+                return []  # aucun commit → aucune branche
+            raise
 
     def setRepoDir(self, repo_dir: str) -> IRepoWorking:
         self.repo_dir = repo_dir
